@@ -1,0 +1,4 @@
+Debug/
+data/image_features_mRNN/*.txt
+data/mscoco_anno_files/*.txt
+ImageCaption.*
