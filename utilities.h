@@ -13,13 +13,13 @@ namespace utilities {
         string file_path;
         string file_name;
         string url;
-        double* features;
+        vector<double> features;
         vector<string> sentences;
-        void destruct() { delete[] features; }
+        double distance = 0.0;   //to store the distance between image feature for k means algorithm
     };
 
-    map<string, double*> vggLexer(string filename);
-    struct DataArray* dataLoad(string filename, string type, map<string, double*> vggFeatures);
+    map< string, vector<double> > vggLexer(string filename);
+    vector<utilities::DataArray> dataLoad(string filename, string type, map< string, vector<double> > vggFeatures);
 };
 
 

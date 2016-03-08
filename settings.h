@@ -28,6 +28,14 @@ public:
         static const string str = "image_features_mRNN/VGG_feat_o_dct_mscoco_2014.txt";
         return str;
     }
+    static const int& FARNEIGHBORSIZE() {
+        static const int k = 100;
+        return k;
+    }
+    static const int& NEIGHBORSIZE() {
+        static const int k = 1;
+        return k;
+    }
 };
 
 

@@ -2,18 +2,19 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <cstdlib>  //for exit
+#include <string>  //for std:stod
 
-
-map<string, double*> utilities::vggLexer(string filename) {
-    map<string, double*> idToFeature;
-    ifstream inputFile(filename.c_str(), ios::_Nocreate);
+map< string, vector<double> > utilities::vggLexer(string filename) {
+    map< string, vector<double> > idToFeature;
+    ifstream inputFile(filename.c_str(), std::ios::in);
     if (!inputFile) {
         cout << filename << " Open Error!" << endl;
         exit(1);
     }
     string row;
     while (getline(inputFile, row)) {
-        double dFeatures[4100];
+        vector<double> dFeatures;
         if (row.empty())  //ignore the empty line
             continue;
 
@@ -29,10 +30,8 @@ map<string, double*> utilities::vggLexer(string filename) {
             else {
                 std::istringstream feautures(token);
                 string feauture;
-                int featureCnt = 0;
                 while (getline(feautures, feauture, ',')) {
-                    dFeatures[featureCnt] = stod(feauture);
-                    featureCnt++;
+                    dFeatures.push_back(std::atof(feauture.c_str()));
                 }
                 idToFeature[id] = dFeatures;
             }
@@ -41,17 +40,16 @@ map<string, double*> utilities::vggLexer(string filename) {
     return idToFeature;
 }
 
-struct utilities::DataArray* utilities::dataLoad(string filename, string type, map<string, double*> vggFeatures) {
-    struct utilities::DataArray* dataArray = {};
-    int cnt = 0;
-    ifstream inputFile(filename.c_str(), ios::_Nocreate);
+vector<utilities::DataArray> utilities::dataLoad(string filename, string type, map< string, vector<double> > vggFeatures) {
+    vector<utilities::DataArray> dataArray;
+    ifstream inputFile(filename.c_str(), std::ios::in);
     if (!inputFile) {
         cout << filename << " Open Error!" << endl;
         exit(1);
     }
     
     string line;
-    string* keys = {};
+    string keys[20];
     int index;
     while (getline(inputFile, line)) {
         //get column title and store in keys
@@ -68,24 +66,25 @@ struct utilities::DataArray* utilities::dataLoad(string filename, string type, m
             std::istringstream lineStream(line);
             string token;
             index = 0;
+            utilities::DataArray dataItem;
             while (getline(lineStream, token, '\t')) {
                 if (keys[index] == "id") {
-                    dataArray[cnt].id = token;
+                    dataItem.id = token;
                 }
                 else if (keys[index] == "file_path") {
-                    dataArray[cnt].file_path = token;
+                    dataItem.file_path = token;
                 }
                 else if (keys[index] == "file_name") {
-                    dataArray[cnt].file_name = token;
+                    dataItem.file_name = token;
                 }
                 else if (keys[index] == "url") {
-                    dataArray[cnt].url == token;
+                    dataItem.url = token;
                 }
                 else if (keys[index] == "sentences") {
                     std::istringstream tokenStream(token);
                     string sentence;
                     while (getline(tokenStream, sentence, ',')) {
-                        dataArray[cnt].sentences.push_back(sentence);
+                        dataItem.sentences.push_back(sentence);
                     }
                 }
                 else {
@@ -94,12 +93,12 @@ struct utilities::DataArray* utilities::dataLoad(string filename, string type, m
                 }
                 index++;
             }
-            dataArray[cnt].features = vggFeatures[dataArray[cnt].id];
+            dataItem.features = vggFeatures[dataItem.id];
             if (type == "train") {
-                dataArray[cnt].url = "http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/" 
-                                     + dataArray[cnt].file_name;
+                dataItem.url = "http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/" 
+                                     + dataItem.file_name;
             }
-            cnt++;
+            dataArray.push_back(dataItem);
         }
     }
     return dataArray;
