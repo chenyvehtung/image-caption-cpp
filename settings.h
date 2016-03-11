@@ -36,6 +36,10 @@ public:
         static const int k = 1;
         return k;
     }
+    static const string& WORD2VECBIN() {
+        static const string str = "files/corpora/mscoco/vectors.bin";
+        return str;
+    }
 };
 
 
