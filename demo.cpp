@@ -1,5 +1,5 @@
 #include "settings.h"
-#include "utilities.h"
+#include "utilities/utilities.h"
 #include <string>
 #include <map>
 #include <iostream>

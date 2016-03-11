@@ -1,7 +1,7 @@
 #ifndef VISION_H_
 #define VISION_H_
 
-#include "utilities.h"
+#include "../../utilities/utilities.h"
 #include <vector>
 
 class Vision {

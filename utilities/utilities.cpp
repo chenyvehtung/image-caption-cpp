@@ -103,3 +103,14 @@ vector<utilities::DataArray> utilities::dataLoad(string filename, string type, m
     }
     return dataArray;
 }
+
+vector<string> utilities::sentenceTokenizer(string sentence) {
+
+    vector<string> words;
+    std::istringstream tokens(sentence);
+    string word;
+    while (getline(tokens, word, ' ')) {
+        words.push_back(word);
+    }
+    return words;
+}

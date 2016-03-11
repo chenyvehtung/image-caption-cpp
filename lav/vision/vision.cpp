@@ -33,10 +33,13 @@ vector<utilities::DataArray> Vision::removeOutLier(const vector<utilities::DataA
     sort(neighbors.begin(), neighbors.end(), comparator);
     minDist = neighbors[0].distance;
     maxDist = neighbors[neighbors.size() - 1].distance;
-    while (neighbors.size() >= numNearNeigb) {
+    while (neighbors.size() > numNearNeigb) {
         if (neighbors.back().distance > (1 + epsilon) * minDist) {
             neighbors.pop_back();
         }
+        //because we have sorted the neighbors from near to far, so the rest would be all matched condition
+        else
+            break;
     }
     return neighbors;
 }
