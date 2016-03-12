@@ -20,7 +20,6 @@ namespace utilities {
 
     map< string, vector<double> > vggLexer(string filename);
     vector<utilities::DataArray> dataLoad(string filename, string type, map< string, vector<double> > vggFeatures);
-    vector<string> sentenceTokenizer(string sentence);
 };
 
 

@@ -8,6 +8,7 @@ using namespace std;
 class Settings {
 
 public:
+    //for string, use function because const string is banned from giving init value
     static const string& DATAPATH() {
         static const string str = "data/";
         return str;
@@ -28,18 +29,16 @@ public:
         static const string str = "image_features_mRNN/VGG_feat_o_dct_mscoco_2014.txt";
         return str;
     }
-    static const int& FARNEIGHBORSIZE() {
-        static const int k = 100;
-        return k;
-    }
-    static const int& NEIGHBORSIZE() {
-        static const int k = 1;
-        return k;
-    }
     static const string& WORD2VECBIN() {
         static const string str = "files/corpora/mscoco/vectors.bin";
         return str;
     }
+
+    static const int FARNEIGHBORSIZE = 100;
+    static const int NEIGHBORSIZE = 1;
+    static const bool EXSTOPWORDS = true;
+    static const bool INOPERAWORDS = true;
+
 };
 
 
