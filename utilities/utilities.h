@@ -15,7 +15,7 @@ namespace utilities {
         string url;
         vector<double> features;
         vector<string> sentences;
-        double distance = 0.0;   //to store the distance between image feature for k means algorithm
+        double distance = 0.0;   //to store the distance between image feature for first rank
     };
 
     map< string, vector<double> > vggLexer(string filename);

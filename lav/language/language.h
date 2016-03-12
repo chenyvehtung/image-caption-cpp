@@ -1,9 +1,10 @@
 #ifndef LANGUAGE_H_
 #define LANGUAGE_H_
 
-#include "../../utilities/utilities.h"
 #include "../../lib/word2vec-cpp/word2vec.h"
 #include <vector>
+using std::string; 
+using std::vector;
 
 class Language {
 
@@ -22,7 +23,6 @@ public:
     where cosine(A,B) = dot(A,B) / ( || A || * || B || )*/
     double getCosSimilarity(const vector<double>& baseVec, const vector<double>& targetVec);
 
-private:
     vector<string> sentenceTokenizer(string sentence);
 };
 

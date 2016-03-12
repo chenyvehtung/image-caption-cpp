@@ -1,9 +1,9 @@
 #include "language.h"
-#include "../../settings.h"
 #include <iostream>
 #include <cstdlib>  //for exit
 #include <algorithm>  //for find
-#include <cmath>  //for std::abs, for std::pow
+#include <cmath>  //for std::abs, std::pow
+using std::ifstream;
 
 vector<string> Language::loadExcludeWord(string excludeFile, string includeFile, bool needExclude, bool needInclude) {
     vector<string> excludeVec;
@@ -11,7 +11,7 @@ vector<string> Language::loadExcludeWord(string excludeFile, string includeFile,
     if (needExclude) {
         ifstream excludeWords(excludeFile.c_str(), std::ios::in);
         if (!excludeWords) {
-            std::cout << excludeFile << " open filed!" << endl;
+            std::cout << excludeFile << " open filed!" << std::endl;
             exit(1);
         }
        string excludeWord;
@@ -23,7 +23,7 @@ vector<string> Language::loadExcludeWord(string excludeFile, string includeFile,
     if (needInclude) {
         ifstream includeWords(includeFile.c_str(), std::ios::in);
         if (!includeWords) {
-            std::cout << includeFile << " open error!" << endl;
+            std::cout << includeFile << " open error!" << std::endl;
             exit(1);
         }
         string includeWord;
@@ -37,16 +37,6 @@ vector<string> Language::loadExcludeWord(string excludeFile, string includeFile,
     return excludeVec;
 }
 
-vector<string> Language::sentenceTokenizer(string sentence) {
-    vector<string> words;
-    std::istringstream tokens(sentence);
-    string word;
-    while (getline(tokens, word, ' ')) {
-        words.push_back(word);
-    }
-    return words;
-}
-
 vector<double> Language::getSentenceVec(Word2Vec<std::string> model, const vector<string>& sentence, const vector<string>& excludeVec,
                                bool needExclude) {
     vector<double> sentenceVec;
@@ -54,7 +44,7 @@ vector<double> Language::getSentenceVec(Word2Vec<std::string> model, const vecto
         if (needExclude && (find(excludeVec.begin(), excludeVec.end(), word) != excludeVec.end())) {
             const vector<float> wordVec = model.word_vector(word);
             if (sentenceVec.size() != wordVec.size()) {
-                std::cout << "wrong word vector maybe!" << endl;
+                std::cout << "wrong word vector maybe!" << std::endl;
                 exit(1);
             }
             else {
@@ -77,7 +67,7 @@ double Language::getSentencePenalty(const int tokenCnt, const int avgCnt) {
 double Language::getCosSimilarity(const vector<double>& baseVec, const vector<double>& targetVec) {
     double cosDist = 0;
     if (baseVec.size() != targetVec.size()) {
-        std::cout << "the vectors are not in the same size, cannot calculate cos distance" << endl;
+        std::cout << "the vectors are not in the same size, cannot calculate cos distance" << std::endl;
         exit(1);
     }
     else {
@@ -92,4 +82,15 @@ double Language::getCosSimilarity(const vector<double>& baseVec, const vector<do
         cosDist = dotProduct / (baseNorm * targetNorm);
     }
     return cosDist;
+}
+
+
+vector<string> Language::sentenceTokenizer(string sentence) {
+    vector<string> words;
+    std::istringstream tokens(sentence);
+    string word;
+    while (getline(tokens, word, ' ')) {
+        words.push_back(word);
+    }
+    return words;
 }
