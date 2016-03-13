@@ -76,7 +76,7 @@ const string Lav::describeImg(const utilities::DataArray& queryItem,
     int index = 0;
     for (auto& neighbor : neighbors) {
         for (auto& caption : neighbor.sentences) {
-            cout << queryImg.size() << "\t" << allSentenceVec[index].size() << endl;
+            //cout << queryImg.size() << "\t" << allSentenceVec[index].size() << endl;
             double cosDist = language.getCosSimilarity(queryImg, allSentenceVec[index]);
             captionMap[cosDist] = caption;
             index++;

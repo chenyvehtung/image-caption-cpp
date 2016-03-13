@@ -30,16 +30,17 @@ int main() {
     cout << "load data success! " << chrono::duration_cast<std::chrono::microseconds>(cend - cstart).count() / 1000000.0
         << " seconds cost." << endl;
 
-    srand(time(NULL));
-    queryData = testData[rand() % testData.size()];
     //append valData to the end of trainData
     trainData.insert(trainData.end(), valData.begin(), valData.end());
 
-    cstart = chrono::high_resolution_clock::now();
-    queryCaption = lav.describeImg(queryData, trainData);
-    cend = chrono::high_resolution_clock::now();
-    cout << queryCaption << " " << queryData.url << " Takes "
-        << chrono::duration_cast<std::chrono::microseconds>(cend - cstart).count() / 1000000.0 << " seconds" << endl;
-    
+    for (int i = 0; i < 10; i++) {
+        srand(time(NULL));
+        queryData = testData[rand() % testData.size()];
+        cstart = chrono::high_resolution_clock::now();
+        queryCaption = lav.describeImg(queryData, trainData);
+        cend = chrono::high_resolution_clock::now();
+        cout << queryCaption << "\nURL: " << queryData.url << "\nID: " << queryData.id << "\nTakes "
+            << chrono::duration_cast<std::chrono::microseconds>(cend - cstart).count() / 1000000.0 << " seconds" << endl;
+    }
     return 0;
 }

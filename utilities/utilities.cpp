@@ -94,7 +94,7 @@ vector<utilities::DataArray> utilities::dataLoad(string filename, string type, m
                 index++;
             }
             dataItem.features = vggFeatures[dataItem.id];
-            if (type == "train") {
+            if (type == "test") {
                 dataItem.url = "http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/" 
                                      + dataItem.file_name;
             }
