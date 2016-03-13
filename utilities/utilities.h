@@ -16,6 +16,10 @@ namespace utilities {
         vector<double> features;
         vector<string> sentences;
         double distance = 0.0;   //to store the distance between image feature for first rank
+
+        bool operator<(const DataArray& a) const {
+            return distance < a.distance;
+        }
     };
 
     map< string, vector<double> > vggLexer(string filename);

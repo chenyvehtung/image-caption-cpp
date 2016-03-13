@@ -40,15 +40,28 @@ vector<string> Language::loadExcludeWord(string excludeFile, string includeFile,
 vector<double> Language::getSentenceVec(Word2Vec<std::string> model, const vector<string>& sentence, const vector<string>& excludeVec,
                                bool needExclude) {
     vector<double> sentenceVec;
+    bool flag = true;
     for (auto &word : sentence) {
-        if (needExclude && (find(excludeVec.begin(), excludeVec.end(), word) != excludeVec.end())) {
+        //need exclude and the word isn't in the list of exclude words.
+        if (needExclude && (find(excludeVec.begin(), excludeVec.end(), word) == excludeVec.end())) {
             const vector<float> wordVec = model.word_vector(word);
+            if (wordVec.size() == 0) {
+                OOV++;
+                continue;
+            }
+            //initialize sentenceVec with 0 in the size of wordVec
+            if (flag) {
+                flag = false;
+                for (int j = 0; j < wordVec.size(); j++) 
+                    sentenceVec.push_back(0);
+            }
+            //std::cout << sentenceVec.size() << "\t" << wordVec.size() << std::endl;
             if (sentenceVec.size() != wordVec.size()) {
                 std::cout << "wrong word vector maybe!" << std::endl;
                 exit(1);
             }
             else {
-                for (int i = 0; i < sentence.size(); i++) {
+                for (int i = 0; i < sentenceVec.size(); i++) {
                     sentenceVec[i] += wordVec[i];
                 }
             }

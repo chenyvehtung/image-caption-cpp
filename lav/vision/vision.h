@@ -15,7 +15,10 @@ public:
 
 
 private:
-    bool comparator(const std::pair<double, int>& left, const std::pair<double, int>& right);
+    //bool comparator(const std::pair<double, int>& left, const std::pair<double, int>& right);
+
+    /*sort the DataArray according to eculidean distance*/
+    bool distComparator(const utilities::DataArray& left, const utilities::DataArray& right);
     double euclideanDist(const vector<double>& dataFeature, const vector<double>& queryFeature);
 };
 

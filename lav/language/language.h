@@ -24,6 +24,8 @@ public:
     double getCosSimilarity(const vector<double>& baseVec, const vector<double>& targetVec);
 
     vector<string> sentenceTokenizer(string sentence);
+
+    int OOV = 0;
 };
 
 #endif

@@ -3,6 +3,8 @@
 #include "language/language.h"
 #include "vision/vision.h"
 #include <map>
+#include <chrono>  //for high_resolution_clock
+#include <iostream>
 
 const string Lav::describeImg(const utilities::DataArray& queryItem,
              vector<utilities::DataArray>& candidateSet) {
@@ -19,7 +21,12 @@ const string Lav::describeImg(const utilities::DataArray& queryItem,
 
     /*---------------load language model word2vec------------*/
     Word2Vec<std::string> model;
+    auto cstart = chrono::high_resolution_clock::now();
     model.load(Settings::WORD2VEC_BIN());
+    auto cend = chrono::high_resolution_clock::now();
+    cout << chrono::duration_cast<std::chrono::microseconds>(cend - cstart).count() / 1000000.0
+        << " seconds cost." << endl;
+
     vector<string> excludeWords = language.loadExcludeWord(Settings::EXCLUDE_FILE(), Settings::INCLUDE_FILE(), 
                                                         Settings::EX_STOP_WORDS, Settings::IN_OPERA_WORDS);
     int avgCnt = 0, totalNum = 0;
@@ -69,11 +76,14 @@ const string Lav::describeImg(const utilities::DataArray& queryItem,
     int index = 0;
     for (auto& neighbor : neighbors) {
         for (auto& caption : neighbor.sentences) {
+            cout << queryImg.size() << "\t" << allSentenceVec[index].size() << endl;
             double cosDist = language.getCosSimilarity(queryImg, allSentenceVec[index]);
             captionMap[cosDist] = caption;
             index++;
         }
     }
+
+    OOV = language.OOV;
 
     return captionMap.begin()->second;
 }

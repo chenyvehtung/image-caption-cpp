@@ -25,7 +25,7 @@ map< string, vector<double> > utilities::vggLexer(string filename) {
             if (cnt == 0) {
                 id = token;
                 cnt++;
-                cout << id << "\n";
+                //cout << id << "\n";
             }
             else {
                 std::istringstream feautures(token);

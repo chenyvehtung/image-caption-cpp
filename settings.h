@@ -34,11 +34,11 @@ public:
         return str;
     }
     static const string& EXCLUDE_FILE() {
-        static const string str = "";
+        static const string str = "files/corpora/mscoco/exclude.txt";
         return str;
     }
     static const string& INCLUDE_FILE() {
-        static const string str = "";
+        static const string str = "files/corpora/mscoco/include.txt";
         return str;
     }
 

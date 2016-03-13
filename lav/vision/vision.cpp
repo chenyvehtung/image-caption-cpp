@@ -8,7 +8,7 @@
 vector<utilities::DataArray> Vision::retrieveVisualSimilarImg(const utilities::DataArray& queryItem,
     vector<utilities::DataArray>& candidateSet, int numNearNeigb) {
 
-    vector< std::pair<double, int> > distVec;
+    /*vector< std::pair<double, int> > distVec;
     int index = 0;
     for (vector<utilities::DataArray>::iterator it = candidateSet.begin(); it != candidateSet.end(); it++) {
         double dist = euclideanDist(it->features, queryItem.features);
@@ -22,7 +22,14 @@ vector<utilities::DataArray> Vision::retrieveVisualSimilarImg(const utilities::D
         int kIndex = distVec[i].second;
         candidateSet[kIndex].distance = kDist;
         kSimilarImg.push_back(candidateSet[kIndex]);
+    }*/
+    for (auto& candidate : candidateSet) {
+        candidate.distance = euclideanDist(candidate.features, queryItem.features);
     }
+    //sort candidateSet according to euclidean distance 
+    sort(candidateSet.begin(), candidateSet.end());
+    //return the first numNearNeighb candidate
+    vector<utilities::DataArray> kSimilarImg(candidateSet.begin(), candidateSet.begin() + numNearNeigb);
     return kSimilarImg;
 }
 
@@ -30,7 +37,7 @@ vector<utilities::DataArray> Vision::removeOutLier(const vector<utilities::DataA
     int numNearNeigb, double& maxDist, double& minDist) {
 
     vector<utilities::DataArray> neighbors(candidateSet);
-    sort(neighbors.begin(), neighbors.end(), comparator);
+    sort(neighbors.begin(), neighbors.end());
     minDist = neighbors[0].distance;
     maxDist = neighbors[neighbors.size() - 1].distance;
     while (neighbors.size() > numNearNeigb) {
@@ -60,8 +67,12 @@ double Vision::visualSimilarity(double queryDist, double maxDist, double minDist
 }
 
 
-bool Vision::comparator(const std::pair<double, int>& left, const std::pair<double, int>& right) {
+/*bool Vision::comparator(const std::pair<double, int>& left, const std::pair<double, int>& right) {
     return left.first < right.first;
+}*/
+
+bool Vision::distComparator(const utilities::DataArray& left, const utilities::DataArray& right) {
+    return left.distance < right.distance;
 }
 
 double Vision::euclideanDist(const vector<double>& dataFeature, const vector<double>& queryFeature) {

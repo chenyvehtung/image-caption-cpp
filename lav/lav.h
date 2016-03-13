@@ -11,6 +11,7 @@ class Lav {
 public:
     /*Retrieve relevant descriptions for a query image*/
     const string describeImg(const utilities::DataArray& queryItem, vector<utilities::DataArray>& candidataSet);
+    int OOV = 0;
 
 };
 
