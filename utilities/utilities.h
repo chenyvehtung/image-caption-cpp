@@ -22,6 +22,16 @@ namespace utilities {
         }
     };
 
+    struct CaptionArray {
+        vector<double> sentence_vec;
+        double cos_distance = 0.0; //to store the cos distance between the sentence vector and query img vector
+        string caption;
+
+        bool operator < (const CaptionArray& a) const {
+            return cos_distance < a.cos_distance;
+        }
+    };
+
     map< string, vector<double> > vggLexer(string filename);
     vector<utilities::DataArray> dataLoad(string filename, string type, map< string, vector<double> > vggFeatures);
 };

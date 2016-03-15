@@ -7,22 +7,6 @@
 
 vector<utilities::DataArray> Vision::retrieveVisualSimilarImg(const utilities::DataArray& queryItem,
     vector<utilities::DataArray>& candidateSet, int numNearNeigb) {
-
-    /*vector< std::pair<double, int> > distVec;
-    int index = 0;
-    for (vector<utilities::DataArray>::iterator it = candidateSet.begin(); it != candidateSet.end(); it++) {
-        double dist = euclideanDist(it->features, queryItem.features);
-        distVec.push_back(std::make_pair(dist, index));
-        index++;
-    }
-    sort(distVec.begin(), distVec.end(), comparator);
-    vector<utilities::DataArray> kSimilarImg;
-    for (int i = 0; i < numNearNeigb; i++) {
-        double kDist = distVec[i].first;
-        int kIndex = distVec[i].second;
-        candidateSet[kIndex].distance = kDist;
-        kSimilarImg.push_back(candidateSet[kIndex]);
-    }*/
     for (auto& candidate : candidateSet) {
         candidate.distance = euclideanDist(candidate.features, queryItem.features);
     }
@@ -30,6 +14,14 @@ vector<utilities::DataArray> Vision::retrieveVisualSimilarImg(const utilities::D
     sort(candidateSet.begin(), candidateSet.end());
     //return the first numNearNeighb candidate
     vector<utilities::DataArray> kSimilarImg(candidateSet.begin(), candidateSet.begin() + numNearNeigb);
+
+    int cnt = 0;
+    for (auto& similarImg : kSimilarImg) 
+        for (auto& sentence : similarImg.sentences) {
+            std::cout << cnt << "\t" << sentence << std::endl;
+            cnt++;
+        }
+
     return kSimilarImg;
 }
 

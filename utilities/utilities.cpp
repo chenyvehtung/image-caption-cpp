@@ -65,9 +65,10 @@ vector<utilities::DataArray> utilities::dataLoad(string filename, string type, m
         else {
             std::istringstream lineStream(line);
             string token;
-            index = 0;
+            index = -1;
             utilities::DataArray dataItem;
             while (getline(lineStream, token, '\t')) {
+                index++;
                 if (keys[index] == "id") {
                     dataItem.id = token;
                 }
@@ -88,10 +89,8 @@ vector<utilities::DataArray> utilities::dataLoad(string filename, string type, m
                     }
                 }
                 else {
-                    index++;
                     continue;
                 }
-                index++;
             }
             dataItem.features = vggFeatures[dataItem.id];
             if (type == "test") {

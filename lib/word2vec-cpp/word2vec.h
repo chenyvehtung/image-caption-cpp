@@ -415,7 +415,7 @@ struct Word2Vec
 		}
 
 		layer1_size_ = syn0_[0].size();
-		printf("%d words loaded\n", n_words);
+		//printf("%d words loaded\n", n_words);
 
 		syn0norm_ = syn0_;
 		for (auto& v: syn0norm_) v::unit(v);

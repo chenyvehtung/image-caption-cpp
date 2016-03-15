@@ -80,6 +80,7 @@ double Language::getSentencePenalty(const int tokenCnt, const int avgCnt) {
 double Language::getCosSimilarity(const vector<double>& baseVec, const vector<double>& targetVec) {
     double cosDist = 0;
     if (baseVec.size() != targetVec.size()) {
+        std::cout << baseVec.size() << "\t" << targetVec.size() << std::endl;
         std::cout << "the vectors are not in the same size, cannot calculate cos distance" << std::endl;
         exit(1);
     }
