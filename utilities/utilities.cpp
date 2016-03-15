@@ -84,7 +84,7 @@ vector<utilities::DataArray> utilities::dataLoad(string filename, string type, m
                 else if (keys[index] == "sentences") {
                     std::istringstream tokenStream(token);
                     string sentence;
-                    while (getline(tokenStream, sentence, ',')) {
+                    while (getline(tokenStream, sentence, '~')) {
                         dataItem.sentences.push_back(sentence);
                     }
                 }

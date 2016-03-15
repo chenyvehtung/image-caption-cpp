@@ -29,8 +29,8 @@ for file_name in file_names:
             if key == 'sentences':  # deal with sentence 
                 for sentence in item['sentences']:
                     sentence = ' '.join([str(word).strip() for word in sentence])
-                    temp_str = temp_str + sentence + ','
-                temp_str = temp_str[:-1] + '\t' # remove the last ',' ans set it as '\t'
+                    temp_str = temp_str + sentence + '~'
+                temp_str = temp_str[:-1] + '\t' # remove the last '~' ans set it as '\t'
             else:    
                 temp_str = temp_str + str(item[key]).strip() + '\t'  
         temp_str = temp_str[:-1] + '\n'

@@ -79,7 +79,8 @@ const string Lav::describeImg(const utilities::DataArray& queryItem,
     }
     std::sort(captionSet.begin(), captionSet.end());
 
+    std::cout << captionSet.size() << "\tCaption Dist: " << (captionSet.end()-1)->cos_distance << std::endl;
     OOV = language.OOV;
 
-    return captionSet.begin()->caption;
+    return (captionSet.end() - 1)->caption;
 }

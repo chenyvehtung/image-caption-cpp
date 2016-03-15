@@ -51,7 +51,7 @@ public:
     static const int FAR_NEIGHBOR_SIZE = 100;
     static const int NEIGHBOR_SIZE = 1;
     static const bool EX_STOP_WORDS = true;
-    static const bool IN_OPERA_WORDS = true;
+    static const bool IN_OPERA_WORDS = false;
     static const bool USE_VISUAL_SIMILAR_SCORE = true;
     static const bool USE_SENTENCE_LEN_PENALTY = true;
 

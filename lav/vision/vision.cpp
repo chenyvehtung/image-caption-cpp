@@ -15,12 +15,12 @@ vector<utilities::DataArray> Vision::retrieveVisualSimilarImg(const utilities::D
     //return the first numNearNeighb candidate
     vector<utilities::DataArray> kSimilarImg(candidateSet.begin(), candidateSet.begin() + numNearNeigb);
 
-    int cnt = 0;
+    /*int cnt = 0;
     for (auto& similarImg : kSimilarImg) 
         for (auto& sentence : similarImg.sentences) {
             std::cout << cnt << "\t" << sentence << std::endl;
             cnt++;
-        }
+        }*/
 
     return kSimilarImg;
 }
