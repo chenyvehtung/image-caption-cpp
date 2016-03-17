@@ -54,6 +54,7 @@ public:
     static const bool IN_OPERA_WORDS = false;
     static const bool USE_VISUAL_SIMILAR_SCORE = true;
     static const bool USE_SENTENCE_LEN_PENALTY = true;
+    static const int RETURN_CPATION_NUM = 1;
 
 };
 

@@ -7,7 +7,7 @@
 #include <iostream>
 #include <algorithm> //for std::sort
 
-const string Lav::describeImg(const utilities::DataArray& queryItem,
+vector<utilities::CaptionArray> Lav::describeImg(const utilities::DataArray& queryItem,
              vector<utilities::DataArray>& candidateSet) {
     Language language;
     Vision vision;
@@ -30,15 +30,15 @@ const string Lav::describeImg(const utilities::DataArray& queryItem,
 
     vector<string> excludeWords = language.loadExcludeWord(Settings::EXCLUDE_FILE(), Settings::INCLUDE_FILE(), 
                                                         Settings::EX_STOP_WORDS, Settings::IN_OPERA_WORDS);
-    int avgCnt = 0, totalNum = 0;
+    int avgCnt = 0, captionCnt = 0, tokenCnt = 0;
     if (Settings::USE_SENTENCE_LEN_PENALTY) {
         for (auto& neighbor : neighbors) {
             for (auto& caption : neighbor.sentences) {
-                totalNum++;
-                avgCnt += language.sentenceTokenizer(caption).size();
+                captionCnt++;
+                tokenCnt += language.sentenceTokenizer(caption).size();
             }
         }
-        avgCnt /= totalNum;
+        avgCnt = tokenCnt / captionCnt;
     }
 
     /*--------------calculate query img caption vector------------*/
@@ -68,9 +68,9 @@ const string Lav::describeImg(const utilities::DataArray& queryItem,
             captionSet.push_back(captionItem);
         }//end of 5 caption for one neighbor
     }//end of all neighbors
-    totalNum = captionSet.size();
+    captionCnt = captionSet.size();
     for (int k = 0; k < queryImg.size(); k++) {
-        queryImg[k] /= totalNum;
+        queryImg[k] /= captionCnt;
     }
 
     /*--------------rerank by cos distance------------------*/
@@ -80,7 +80,13 @@ const string Lav::describeImg(const utilities::DataArray& queryItem,
     std::sort(captionSet.begin(), captionSet.end());
 
     std::cout << captionSet.size() << "\tCaption Dist: " << (captionSet.end()-1)->cos_distance << std::endl;
-    OOV = language.OOV;
 
-    return (captionSet.end() - 1)->caption;
+    oovRate = (double)language.OOV * 100 / tokenCnt;
+
+    vector<utilities::CaptionArray> resultSet;
+    for (int j = captionSet.size()-1; j >= captionSet.size()-Settings::RETURN_CPATION_NUM; j--) {
+        resultSet.push_back(captionSet[j]);
+    }
+     
+    return resultSet;
 }

@@ -13,7 +13,7 @@ int main() {
     vector<utilities::DataArray> trainData, valData, testData;
     map< string, vector<double> > vggFeature;
     utilities::DataArray queryData;
-    string queryCaption;
+    vector<utilities::CaptionArray> queryCaption;
     Lav lav;
 
     auto cstart = chrono::high_resolution_clock::now();
@@ -33,14 +33,22 @@ int main() {
     //append valData to the end of trainData
     trainData.insert(trainData.end(), valData.begin(), valData.end());
 
+    /*count the number of sentences I got to make sure the program get the right input
+    int cnt = 0;
+    for (auto & item : trainData) {
+        cnt += item.sentences.size();
+    }
+    std::cout << cnt << std::endl;*/
+
     for (int i = 0; i < 10; i++) {
         srand(time(NULL));
         queryData = testData[rand() % testData.size()];
         cstart = chrono::high_resolution_clock::now();
         queryCaption = lav.describeImg(queryData, trainData);
         cend = chrono::high_resolution_clock::now();
-        cout << queryCaption << "\nURL: " << queryData.url << "\nID: " << queryData.id << "\nTakes "
-            << chrono::duration_cast<std::chrono::microseconds>(cend - cstart).count() / 1000000.0 << " seconds" << endl;
+        cout << queryCaption[0].caption << "\nURL: " << queryData.url << "\nID: " << queryData.id << "\nTakes "
+            << chrono::duration_cast<std::chrono::microseconds>(cend - cstart).count() / 1000000.0 
+            << " seconds. OOV rate is " << lav.oovRate << "%" << endl;
     }
     return 0;
 }
