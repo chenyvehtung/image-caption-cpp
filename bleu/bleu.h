@@ -12,23 +12,19 @@ public:
 
     size_t maxGramNum;
     size_t refNum;
-    map<string, size_t> candStats;
-    vector< map<string, size_t> > refStats;
     vector<size_t> candLengthSum;
+    vector<size_t> candClipSum;
     size_t bestRefLengthSum;
-    double BrePenalty;
 
     Bleu();
     Bleu(size_t gram, size_t ref);
 
     void addSentences(const string& candSentence, const vector<string>& refSentences);
-    void collectStats(string sentence);
-    vector<string> sentenceTokenizer(string sentence);
-    string makeNGram(const vector<string>& sentence, size_t offset, size_t gramNum);
-    void saveClippedHits();
+    map<string, size_t> collectStats(const vector<string>& words, size_t gramNum);
+    string getNextNGram(const vector<string>& sentence, size_t offset, size_t gramNum);
+    void saveClippedHits(const vector<string>& candSentenWords, const vector< vector<string> >& refSentensWords, size_t gramNum);
     double getBleuValue();
-    void resetData();
-
+    vector<string> sentenceTokenizer(string sentence);
 
 };
 
