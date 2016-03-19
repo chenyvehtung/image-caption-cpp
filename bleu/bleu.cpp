@@ -4,7 +4,7 @@
 #include <stdlib.h> //for abs
 #include <iostream> //for std::cout
 #include <cstdlib>  //for exit
-
+#include <climits>  //for INT_MAX
 
 Bleu::Bleu() {
     maxGramNum = 1;
@@ -35,7 +35,7 @@ string Bleu::getNextNGram(const vector<string>& words, size_t offset, size_t gra
 
 map<string, size_t> Bleu::collectStats(const vector<string>& words, size_t gramNum) {
     map<string, size_t> statistics;
-    for (size_t offset = 0; offset <= words.size() - gramNum; offset++) {
+    for (size_t offset = 0; offset <= (size_t)words.size() - gramNum; offset++) {
         string nextNGram = getNextNGram(words, offset, gramNum);
         if (statistics.find(nextNGram) != statistics.end()) 
             statistics[nextNGram] = 1;
@@ -75,6 +75,10 @@ void Bleu::addSentences(const string& candSentence, const vector<string>& refSen
     vector< vector<string> > refSentensWords;
     size_t bestRefLength = INT_MAX;
     for (auto& refSentence : refSentences) {
+        if (refSentence == "") {
+            std::cout << "The reference sentences is empty." << std::endl;
+            exit(1);
+        }
         vector<string> refSentenWords = sentenceTokenizer(refSentence);
         refSentensWords.push_back(refSentenWords);
         if (abs((int)candSentenWords.size() - (int)refSentenWords.size()) < bestRefLength) {
@@ -85,7 +89,7 @@ void Bleu::addSentences(const string& candSentence, const vector<string>& refSen
 
     for (size_t gramNum = 1; gramNum <= maxGramNum; gramNum++) {
         saveClippedHits(candSentenWords, refSentensWords, gramNum);
-        candLengthSum[gramNum] += candSentenWords.size() - gramNum + 1;
+        candLengthSum[gramNum - 1] += candSentenWords.size() - gramNum + 1;
     }
 }
 
@@ -104,12 +108,22 @@ double Bleu::getBleuValue() {
     if (candLengthSum[0] <= bestRefLengthSum) 
         brePenalty = exp(1 - (double)bestRefLengthSum / (double)candLengthSum[0]);
 
-    double weightN = (double)(1 / maxGramNum);
+    std::cout << "\n\nbestRefLengthSum: " << (double)bestRefLengthSum << std::endl;
+    std::cout << "candLengthSum[0]: " << (double)candLengthSum[0] << std::endl;
+    std::cout << "brePenalty: " << brePenalty << std::endl;
+
+    double weightN = 1.0 / (double)maxGramNum;
+    std::cout << "weighN: " << weightN << std::endl;
+
     double modifyPrecisionSum = 0; 
     for (size_t gramNum = 1; gramNum <= maxGramNum; gramNum++) {
         modifyPrecisionSum += weightN * log((double)candClipSum[gramNum-1] / (double)candLengthSum[gramNum-1]);
+
+        std::cout << "candClipSum[" << gramNum - 1 << "]: " << candClipSum[gramNum - 1] 
+            << "\ncanLengthSum[" << gramNum - 1 << "]: " << candLengthSum[gramNum - 1]
+            << "\nmodifyPrecisionSum: " << modifyPrecisionSum << std::endl;
     }
 
-    double bleu = brePenalty * modifyPrecisionSum;
+    double bleu = brePenalty * exp(modifyPrecisionSum);
     return bleu;
 }

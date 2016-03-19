@@ -2,3 +2,5 @@ Debug/
 data/image_features_mRNN/*.txt
 data/mscoco_anno_files/*.txt
 ImageCaption.*
+files/corpora/mscoco/corpus-cleaned.txt
+files/corpora/mscoco/*.bin
