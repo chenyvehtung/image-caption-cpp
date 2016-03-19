@@ -1,10 +1,12 @@
 #include "bleu.h"
-#include <sstream>  //for istringstream
-#include <math.h> //for exp, log
-#include <stdlib.h> //for abs
-#include <iostream> //for std::cout
-#include <cstdlib>  //for exit
-#include <climits>  //for INT_MAX
+#include <sstream>      //for istringstream
+#include <math.h>       //for exp, log
+#include <stdlib.h>     //for abs
+#include <iostream>     //for std::cout
+#include <cstdlib>      //for exit
+#include <climits>      //for INT_MAX
+#include <cctype>       //for tolower
+#include <algorithm>    //for transform
 
 Bleu::Bleu() {
     maxGramNum = 1;
@@ -37,10 +39,10 @@ map<string, size_t> Bleu::collectStats(const vector<string>& words, size_t gramN
     map<string, size_t> statistics;
     for (size_t offset = 0; offset <= (size_t)words.size() - gramNum; offset++) {
         string nextNGram = getNextNGram(words, offset, gramNum);
-        if (statistics.find(nextNGram) != statistics.end()) 
-            statistics[nextNGram] = 1;
-        else
+        /*if (statistics.find(nextNGram) != statistics.end()) //find it
             statistics[nextNGram] += 1;
+        else*/
+        statistics[nextNGram] += 1;
     }
     return statistics;
 }
@@ -56,11 +58,20 @@ void Bleu::saveClippedHits(const vector<string>& candSentenWords, const vector< 
     }
     for (map<string, size_t>::iterator it = candStats.begin(); it != candStats.end(); it++) {
         size_t minLength = it->second;
+        size_t maxRef = 0;
         for (auto& refStat : refStats) {
             map<string, size_t>::iterator findIt = refStat.find(it->first);
-            if (findIt != refStat.end() ) 
-                minLength = (findIt->second < minLength ? findIt->second : minLength);
+            if (findIt != refStat.end() ) {
+                /*std::cout << findIt->second << std::endl;*/
+                maxRef = (findIt->second > maxRef ? findIt->second : maxRef);
+            }
+            /*for (map<string, size_t>::iterator temp = refStat.begin(); temp != refStat.end(); temp++) {
+                std::cout << temp->first << " : " << temp->second << std::endl;
+            }*/
         }
+        /*std::cout << "minLength: " << minLength << std::endl;
+        std::cout << "maxRef: " << maxRef << std::endl;*/
+        minLength = (minLength < maxRef ? minLength : maxRef);
         candClipSum[gramNum - 1] += minLength;
     }
 }
@@ -98,6 +109,7 @@ vector<string> Bleu::sentenceTokenizer(string sentence) {
     std::istringstream sentenStream(sentence);
     string word;
     while (getline(sentenStream, word, ' ')) {
+        transform(word.begin(), word.end(), word.begin(), tolower);
         words.push_back(word);
     }
     return words;
@@ -108,9 +120,9 @@ double Bleu::getBleuValue() {
     if (candLengthSum[0] <= bestRefLengthSum) 
         brePenalty = exp(1 - (double)bestRefLengthSum / (double)candLengthSum[0]);
 
-    std::cout << "\n\nbestRefLengthSum: " << (double)bestRefLengthSum << std::endl;
-    std::cout << "candLengthSum[0]: " << (double)candLengthSum[0] << std::endl;
-    std::cout << "brePenalty: " << brePenalty << std::endl;
+    std::cout << "\n\nbestRefLengthSum: " << (double)bestRefLengthSum
+              << "\ncandLengthSum[0]: " << (double)candLengthSum[0]
+              << "\nbrePenalty: " << brePenalty << std::endl;
 
     double weightN = 1.0 / (double)maxGramNum;
     std::cout << "weighN: " << weightN << std::endl;
@@ -119,9 +131,11 @@ double Bleu::getBleuValue() {
     for (size_t gramNum = 1; gramNum <= maxGramNum; gramNum++) {
         modifyPrecisionSum += weightN * log((double)candClipSum[gramNum-1] / (double)candLengthSum[gramNum-1]);
 
-        std::cout << "candClipSum[" << gramNum - 1 << "]: " << candClipSum[gramNum - 1] 
+        std::cout << "\ncandClipSum[" << gramNum - 1 << "]: " << candClipSum[gramNum - 1] 
             << "\ncanLengthSum[" << gramNum - 1 << "]: " << candLengthSum[gramNum - 1]
-            << "\nmodifyPrecisionSum: " << modifyPrecisionSum << std::endl;
+            << "\nmodifyPrecisionSum: " << modifyPrecisionSum 
+            << "\nmodifyPrecision: " << (double)candClipSum[gramNum-1] / (double)candLengthSum[gramNum-1]
+            << std::endl;
     }
 
     double bleu = brePenalty * exp(modifyPrecisionSum);

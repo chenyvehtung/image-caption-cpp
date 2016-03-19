@@ -1,0 +1,1 @@
+g++-4.8 -o demo -std=c++11 bleu.cpp bleu.h test.cpp
