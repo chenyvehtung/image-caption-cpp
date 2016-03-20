@@ -8,6 +8,8 @@
 #include <cctype>       //for tolower
 #include <algorithm>    //for transform
 
+#define BLEU_DEBUG true //for showing debug message
+
 Bleu::Bleu() {
     maxGramNum = 1;
     refNum = 1;
@@ -56,23 +58,39 @@ void Bleu::saveClippedHits(const vector<string>& candSentenWords, const vector< 
         refStats.push_back(refStat);
         refStat.clear();
     }
+
+    if (BLEU_DEBUG) {
+        std::cout << "\nGramNum: " << gramNum 
+                  << "\ncandStats: " << std::endl;
+        for (auto& candStat : candStats) 
+            std::cout << candStat.first << " : " << candStat.second << std::endl;
+        int cnt = 0;
+        for (auto& refStat : refStats) {
+            std::cout << "refStats[" << cnt << "]: " << std::endl;
+            for (auto& item : refStat)
+                std::cout << item.first << " : " << item.second << std::endl;
+            cnt++;
+        }
+    }
+
     for (map<string, size_t>::iterator it = candStats.begin(); it != candStats.end(); it++) {
         size_t minLength = it->second;
         size_t maxRef = 0;
         for (auto& refStat : refStats) {
             map<string, size_t>::iterator findIt = refStat.find(it->first);
             if (findIt != refStat.end() ) {
-                /*std::cout << findIt->second << std::endl;*/
                 maxRef = (findIt->second > maxRef ? findIt->second : maxRef);
             }
-            /*for (map<string, size_t>::iterator temp = refStat.begin(); temp != refStat.end(); temp++) {
-                std::cout << temp->first << " : " << temp->second << std::endl;
-            }*/
         }
-        /*std::cout << "minLength: " << minLength << std::endl;
-        std::cout << "maxRef: " << maxRef << std::endl;*/
         minLength = (minLength < maxRef ? minLength : maxRef);
         candClipSum[gramNum - 1] += minLength;
+
+        if (BLEU_DEBUG) {
+            std::cout << it->first
+                << "\tcandidateLength: " << it->second
+                << "\tmaxRef: " << maxRef 
+                << "\tcandClipSum[" << gramNum - 1 << "]: " << candClipSum[gramNum - 1] << std::endl;
+        }
     }
 }
 
@@ -83,6 +101,11 @@ void Bleu::addSentences(const string& candSentence, const vector<string>& refSen
     }
 
     vector<string> candSentenWords = sentenceTokenizer(candSentence);
+    if (candSentenWords.size() < maxGramNum) {
+        std::cout << "The candidate's words are less than the masx gram number" << std::endl;
+        exit(1);
+    }
+
     vector< vector<string> > refSentensWords;
     size_t bestRefLength = INT_MAX;
     for (auto& refSentence : refSentences) {
@@ -120,22 +143,28 @@ double Bleu::getBleuValue() {
     if (candLengthSum[0] <= bestRefLengthSum) 
         brePenalty = exp(1 - (double)bestRefLengthSum / (double)candLengthSum[0]);
 
-    std::cout << "\n\nbestRefLengthSum: " << (double)bestRefLengthSum
-              << "\ncandLengthSum[0]: " << (double)candLengthSum[0]
-              << "\nbrePenalty: " << brePenalty << std::endl;
-
     double weightN = 1.0 / (double)maxGramNum;
-    std::cout << "weighN: " << weightN << std::endl;
+
+    if (BLEU_DEBUG) {
+        std::cout << "\nbestRefLengthSum: " << (double)bestRefLengthSum
+            << "\ncandLengthSum[0]: " << (double)candLengthSum[0]
+            << "\nbrePenalty: " << brePenalty 
+            << "\nweighN: " << weightN << std::endl;
+    }
 
     double modifyPrecisionSum = 0; 
     for (size_t gramNum = 1; gramNum <= maxGramNum; gramNum++) {
+        if (candClipSum[gramNum - 1] == 0)
+            candClipSum[gramNum - 1] = 1;
         modifyPrecisionSum += weightN * log((double)candClipSum[gramNum-1] / (double)candLengthSum[gramNum-1]);
 
-        std::cout << "\ncandClipSum[" << gramNum - 1 << "]: " << candClipSum[gramNum - 1] 
-            << "\ncanLengthSum[" << gramNum - 1 << "]: " << candLengthSum[gramNum - 1]
-            << "\nmodifyPrecisionSum: " << modifyPrecisionSum 
-            << "\nmodifyPrecision: " << (double)candClipSum[gramNum-1] / (double)candLengthSum[gramNum-1]
-            << std::endl;
+        if (BLEU_DEBUG) {
+            std::cout << "\ncandClipSum[" << gramNum - 1 << "]: " << candClipSum[gramNum - 1] 
+                << "\ncanLengthSum[" << gramNum - 1 << "]: " << candLengthSum[gramNum - 1]
+                << "\nmodifyPrecisionSum: " << modifyPrecisionSum 
+                << "\nmodifyPrecision: " << (double)candClipSum[gramNum-1] / (double)candLengthSum[gramNum-1]
+                << std::endl;
+        }
     }
 
     double bleu = brePenalty * exp(modifyPrecisionSum);

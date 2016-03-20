@@ -13,11 +13,8 @@ int main(int argc, char const *argv[])
     references.push_back("It is the practical guide for the army always to heed the directions of the party");
     
     string candidate3 = "of the";
-    references.clear();
-    references.push_back("It is a guide to action that ensures that the military will forever heed Party commands");
-    references.push_back("It is the guiding principle which guarantees the military forces always being under the command of the Party");
-    references.push_back("It is the practical guide for the army always to heed the directions of the party");
-    bleu.addSentences(candidate3, references);
+
+    bleu.addSentences(candidate1, references);
     std::cout << bleu.getBleuValue() << std::endl;
     return 0;
 }

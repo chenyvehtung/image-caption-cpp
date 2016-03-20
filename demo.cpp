@@ -43,7 +43,7 @@ int main() {
 
     int gram = 4, refer = 5;
     Bleu* bleu = new Bleu(gram, refer);
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 3; i++) {
         srand(time(NULL));
         //queryData = testData[rand() % testData.size()];
         queryData = valData[rand() % valData.size()];
