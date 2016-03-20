@@ -1,0 +1,52 @@
+load vgg success! 127.89 seconds cost.
+load data success! 19.0039 seconds cost.
+480     Caption Dist: 0.919591
+a boy that is pitching a ball at a baseball game
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000076516.jpg
+ID: 76516
+Takes 27.0269 seconds
+501     Caption Dist: 0.758997
+two birds perched on a bird feeder next to a pine cone
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000489228.jpg
+ID: 489228
+Takes 27.9908 seconds
+200     Caption Dist: 0.926797
+a baseball player pitching a ball on a field
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000570858.jpg
+ID: 570858
+Takes 25.5775 seconds
+201     Caption Dist: 0.958077
+a jet plane speeds down the runway at an airport
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000232566.jpg
+ID: 232566
+Takes 22.1161 seconds
+110     Caption Dist: 0.883998
+a bottle of liquor , cups and a tablet on a table
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000349731.jpg
+ID: 349731
+Takes 22.5743 seconds
+75      Caption Dist: 0.873618
+a person surfing on the waves near a beach
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000185353.jpg
+ID: 185353
+Takes 19.8782 seconds
+230     Caption Dist: 0.86821
+people kite surfing in the water near the beach
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000371820.jpg
+ID: 371820
+Takes 24.5165 seconds
+210     Caption Dist: 0.888556
+a stop sign on a pole on the corner of a street
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000282512.jpg
+ID: 282512
+Takes 24.0897 seconds
+60      Caption Dist: 0.91883
+a small galley kitchen with pink cabinets and a kettle on the stove
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000231501.jpg
+ID: 231501
+Takes 21.3281 seconds
+500     Caption Dist: 0.854517
+a man in suit and tie holding a cell phone posing for a picture
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000324306.jpg
+ID: 324306
+Takes 27.2431 seconds

@@ -1,53 +1,42 @@
-load vgg success! 135.615 seconds cost.
-load data success! 13.6972 seconds cost.
-9564 words loaded
-0.212423 seconds cost.
-two people holding hands while on surfboards in the water
-URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000329140.jpg
-ID: 329140
-Takes 22.0812 seconds
-9564 words loaded
-0.195033 seconds cost.
-a toddler on a seat on the floor
-URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000527549.jpg
-ID: 527549
-Takes 19.1841 seconds
-9564 words loaded
-0.194965 seconds cost.
- looking up 
-URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000453798.jpg
-ID: 453798
-Takes 22.1443 seconds
-9564 words loaded
-0.378382 seconds cost.
-a woman sitting on a motorcycle holding a baby
-URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000525547.jpg
-ID: 525547
-Takes 18.468 seconds
-9564 words loaded
-0.200162 seconds cost.
-a female in a blue top is sitting on a white chair
-URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000498619.jpg
-ID: 498619
-Takes 18.4625 seconds
-9564 words loaded
-0.186337 seconds cost.
- and a fence
-URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000146316.jpg
-ID: 146316
-Takes 19.6051 seconds
-9564 words loaded
-0.191923 seconds cost.
-a large 
-URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000016743.jpg
-ID: 16743
-Takes 18.3122 seconds
-9564 words loaded
-0.201163 seconds cost.
-a blue heron standing in a pond full of leaves
-URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000360718.jpg
-ID: 360718
-Takes 16.4228 seconds
-9564 words loaded
-0.21042 seconds cost.
-the vectors are not in the same size, cannot calculate cos distance
+load vgg success! 130.045 seconds cost.
+load data success! 12.6646 seconds cost.
+four persons are bathing in the river one of them is returning
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000257719.jpg
+ID: 257719
+Takes 18.4622 seconds
+the passenger train has two different colored halves
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000040463.jpg
+ID: 40463
+Takes 17.6946 seconds
+a man with no reflection as he shaves
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000060333.jpg
+ID: 60333
+Takes 19.9682 seconds
+the red white and blue lights hang over the balcony
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000434095.jpg
+ID: 434095
+Takes 18.7765 seconds
+pair of old commodes in run down bathroom area
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000323088.jpg
+ID: 323088
+Takes 19.1579 seconds
+the shade is pulled down on the window
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000579803.jpg
+ID: 579803
+Takes 18.9329 seconds
+a street that has some signs by it
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000118077.jpg
+ID: 118077
+Takes 25.086 seconds
+maybe this is a blurry picture of santa's sleigh
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000148888.jpg
+ID: 148888
+Takes 22.0222 seconds
+a busy street of cars passing by one another
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000301313.jpg
+ID: 301313
+Takes 24.1049 seconds
+this appears to be an image of louis from superman
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000101153.jpg
+ID: 101153
+Takes 19.0174 seconds

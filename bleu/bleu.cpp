@@ -8,7 +8,7 @@
 #include <cctype>       //for tolower
 #include <algorithm>    //for transform
 
-#define BLEU_DEBUG true //for showing debug message
+#define BLEU_DEBUG false //for showing debug message
 
 Bleu::Bleu() {
     maxGramNum = 1;

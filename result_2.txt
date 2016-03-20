@@ -1,0 +1,50 @@
+240     Caption Dist: 0.760491
+this is the outside of a building in a city
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000355080.jpg
+ID: 355080
+Takes 21.699 seconds
+500     Caption Dist: 0.922392
+a young man and woman are holding video game controllers
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000055245.jpg
+ID: 55245
+Takes 25.4893 seconds
+50      Caption Dist: 0.908008
+a red truck parked on grass next to larger trucks
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000149236.jpg
+ID: 149236
+Takes 17.9953 seconds
+55      Caption Dist: 0.904675
+a large body of water with boats in the water and various people in the water at the shoreline
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000226250.jpg
+ID: 226250
+Takes 17.2428 seconds
+50      Caption Dist: 0.962817
+a man pitching a ball to a child holding a baseball bat
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000183869.jpg
+ID: 183869
+Takes 17.3761 seconds
+85      Caption Dist: 0.833424
+the small , shaggy , white dog is sitting in a chair
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000068001.jpg
+ID: 68001
+Takes 18.2931 seconds
+110     Caption Dist: 0.961227
+a surfer riding a surfboard through cresting ocean waves
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000423789.jpg
+ID: 423789
+Takes 19.3422 seconds
+270     Caption Dist: 0.939247
+a large clock tower with a massive clock
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000040532.jpg
+ID: 40532
+Takes 22.9083 seconds
+310     Caption Dist: 0.928795
+there is a woman that is flying a kite in the sky
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000009201.jpg
+ID: 9201
+Takes 21.6149 seconds
+25      Caption Dist: 0.915128
+a couple of air planes flying through a blue sky
+URL: http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/COCO_test2014_000000029515.jpg
+ID: 29515
+Takes 18.2315 seconds
