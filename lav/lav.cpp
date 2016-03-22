@@ -75,6 +75,7 @@ vector<utilities::CaptionArray> Lav::describeImg(const utilities::DataArray& que
 
     /*--------------rerank by cos distance------------------*/
     for (auto& captionItem : captionSet) {
+        std::cout << captionItem.caption << std::endl;
         captionItem.cos_distance = language.getCosSimilarity(queryImg, captionItem.sentence_vec);
     }
     std::sort(captionSet.begin(), captionSet.end());

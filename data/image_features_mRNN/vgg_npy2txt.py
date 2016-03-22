@@ -1,8 +1,8 @@
 import numpy as np 
 import os
 
-npy_name = 'VGG_feat_o_dct_mscoco_2014.npy'
-txt_name = 'VGG_feat_o_dct_mscoco_2014.txt'
+npy_name = 'VGG_feat_mRNN_refine_dct_mscoco_2014.npy'
+txt_name = 'VGG_feat_mRNN_refine_dct_mscoco_2014.txt'
 
 features = np.load(npy_name).tolist()
 print 'load data success!'

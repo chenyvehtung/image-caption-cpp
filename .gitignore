@@ -1,6 +1,8 @@
 Debug/
 data/image_features_mRNN/*.txt
 data/mscoco_anno_files/*.txt
+data/image_features_mRNN/*.npy
+data/mscoco_anno_files/*.npy
 ImageCaption.*
 files/corpora/mscoco/corpus-cleaned.txt
 files/corpora/mscoco/*.bin

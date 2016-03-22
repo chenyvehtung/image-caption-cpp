@@ -42,10 +42,16 @@ int main() {
     captionResult.open("capresults.txt");
     ofstream humanResult;
     humanResult.open("humanresults.txt");
+
     for (auto& valItem : valData) {
+        if (valItem.id == "321169") {
+            queryData = valItem;
+            break;
+        }
+    }
         srand(time(NULL));
         //queryData = testData[rand() % testData.size()];
-        queryData = valItem;
+        //queryData = valItem;
         cstart = chrono::high_resolution_clock::now();
         queryCaption = lav.describeImg(queryData, trainData);
         cend = chrono::high_resolution_clock::now();
@@ -66,7 +72,7 @@ int main() {
         captionResult << queryData.id << "\t" << queryCaption[0].caption << "\n";
         humanResult << queryData.id << "\t" << queryData.sentences[index] << "\n";
         captionResult.flush(); humanResult.flush();
-    }
+//    }
     double captionBleu = bleu->getBleuValue();
     double humanBleu = bleuHuman->getBleuValue();
 
