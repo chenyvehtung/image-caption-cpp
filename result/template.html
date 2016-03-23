@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>{{ title }}</title>
+   <link href="css/bootstrap.min.css" rel="stylesheet">
+   <link href="css/homepage.css" rel="stylesheet">
+   <script src="js/jquery-2.2.2.min.js"></script>
+   <script src="js/bootstrap.min.js"></script>
+</head>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">{{ title }}</a>
+    </div>
+    <div class="navbar-right">
+      <ul class="nav navbar-nav">
+        <li><a href="{{ githubAddr }}">Github</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<body>
+
+    <div class="content">
+      {{ bleuValueShow }}
+      {{ imgCapShow }}
+    </div>
+
+</body>
+
+<footer>
+  <p>Powered by {{ author }}</p>
+  <p>Contact Information: <a href="mailto:{{ emailAddr }}">{{ emailAddr }}</a>.</p>
+</footer>
+
+</html>
