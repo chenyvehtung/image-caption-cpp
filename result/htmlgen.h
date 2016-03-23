@@ -17,17 +17,20 @@ public:
     HtmlGen(string filename);
     bool generate(const vector<imgBlock>& results);
     void setInfor(const map<string, string>& dict);
+    void setBleu(const map<string, double>& name2bleu);
 
 private:
 
-    static int compileRegex (regex_t *pResult, const string regexText);
-    static int matchRegex(regex_t *pResult, const string toMatch, vector<regmatch_t*>& matchResults);
-    static int processHtml (regex_t *pResult, string& findText);
+    int compileRegex (regex_t *pResult, const string regexText);
+    int matchRegex(regex_t *pResult, const string toMatch, vector<int>& matchResults);
+    int processHtml(regex_t *pResult, const string& findText, const vector<imgBlock>& results);
+    int genBleuShow();
+    int genImgShow(const vector<imgBlock>& results);
 
-    map<string, string> name2Bleu;
+    map<string, double> name2Bleu;
     map<string, string> messDict;
-    std::ofstream outputFile;
-    std::ifstream inputFile;
+    std::fstream outputFile;
+    std::fstream inputFile;
 };
 
 

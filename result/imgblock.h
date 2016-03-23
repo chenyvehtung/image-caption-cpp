@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <sstream>
 using std::map;
 using std::vector;
 using std::string;
@@ -21,6 +22,17 @@ public:
     vector<string> captions;
     string url;
     string id;  
+    
+    vector<string> split(const string& str, char delim) const {
+        std::istringstream strStream(str);
+        string token;
+        vector<string> results;
+        while (getline(strStream, token, delim)) {
+            results.push_back(token);
+        }
+        return results;
+    }
+
 };
 
 
