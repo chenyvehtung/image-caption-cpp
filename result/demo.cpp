@@ -17,13 +17,14 @@ int main(int argc, char const *argv[])
     test.push_back("ours:bright street light shining down on the street");
     test.push_back("human:a night scene of a traffic light in front of a parking lot");
     test.push_back("them:a night scene of a traffic light in front of a parking lot");
-    imgBlock imgblock(test, "http://shannon.cs.illinois.edu/alice/MSCOCO/images/COCO_val2014_000000226128.jpg", "123");
+    imgBlock imgblock(test, "http://shannon.cs.illinois.edu/alice/MSCOCO/images/COCO_val2014_000000226128.jpg", "MSCOCO_000000226128.jpg");
     vector<imgBlock> imgblocks;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 10; i++) {
         imgblocks.push_back(imgblock);
     }
     std::cout << "Everything was all set." << std::endl; 
     htmlGen.generate(imgblocks);
+    std::cout << "Finish" << std::endl;
 
     return 0;
 }

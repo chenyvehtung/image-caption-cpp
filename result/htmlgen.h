@@ -21,8 +21,15 @@ public:
 
 private:
 
+    struct TextBlock
+    {
+        int startPos;
+        int endPos;
+        string content;       
+    };
+
     int compileRegex (regex_t *pResult, const string regexText);
-    int matchRegex(regex_t *pResult, const string toMatch, vector<int>& matchResults);
+    int matchRegex(regex_t *pResult, const string toMatch, vector<TextBlock>& matchResults);
     int processHtml(regex_t *pResult, const string& findText, const vector<imgBlock>& results);
     int genBleuShow();
     int genImgShow(const vector<imgBlock>& results);
@@ -31,6 +38,7 @@ private:
     map<string, string> messDict;
     std::fstream outputFile;
     std::fstream inputFile;
+    
 };
 
 

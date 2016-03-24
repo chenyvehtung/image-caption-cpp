@@ -77,7 +77,7 @@ int HtmlGen::compileRegex (regex_t *pResult, const string regexText) {
     return 0;
 }
 
-int HtmlGen::matchRegex(regex_t *pResult, const string toMatch, vector<int>& matchResults) {
+int HtmlGen::matchRegex(regex_t *pResult, const string toMatch, vector<TextBlock>& matchResults) {
     matchResults.clear();
     const int matchSize = 10;
     regmatch_t matchResult[matchSize];
@@ -89,12 +89,13 @@ int HtmlGen::matchRegex(regex_t *pResult, const string toMatch, vector<int>& mat
         if (noMatch) {
             return noMatch;
         }
-        int startPos = matchResult[1].rm_so + (preEndPointer - stringStart);
-        int endPos = matchResult[1].rm_eo + (preEndPointer - stringStart);
-        matchResults.push_back(startPos);
-        matchResults.push_back(endPos);
-
-        for (int i = 0; i < matchSize; i++) {
+        TextBlock textBlock;
+        textBlock.startPos = matchResult[0].rm_so + (preEndPointer - stringStart);
+        textBlock.endPos = matchResult[0].rm_eo + (preEndPointer - stringStart);
+        textBlock.content = toMatch.substr(matchResult[1].rm_so + (preEndPointer - stringStart),
+                                           matchResult[1].rm_eo - matchResult[1].rm_so);
+        matchResults.push_back(textBlock);
+        /*for (int i = 0; i < matchSize; i++) {
             if (matchResult[i].rm_so == -1) {
                 break;
             }
@@ -108,8 +109,7 @@ int HtmlGen::matchRegex(regex_t *pResult, const string toMatch, vector<int>& mat
             }
             printf ("'%.*s' (bytes %d:%d)\n", (finish - start),
                     stringStart + start, start, finish);
-       }
-
+       }*/
         preEndPointer += matchResult[0].rm_eo;
     }
 
@@ -117,19 +117,20 @@ int HtmlGen::matchRegex(regex_t *pResult, const string toMatch, vector<int>& mat
 }
 
 int HtmlGen::processHtml(regex_t *pResult, const string& findText, const vector<imgBlock>& results) {
-    vector<int> matchResults;
+    vector<TextBlock> matchResults;
     matchRegex(pResult, findText, matchResults);
     if (matchResults.size() == 0) {
-        outputFile << findText << std::endl;
+        outputFile << findText;
         outputFile.flush();
         return 0;
     }
     int preEndPos = 0;
     string replaceText = "";
-    for (vector<int>::iterator it = matchResults.begin(); it != matchResults.end(); it+=2) {
-        int startPos = *it;
-        int endPos = *(it + 1);
-        string value = findText.substr(startPos, endPos - startPos);
+    for (vector<TextBlock>::iterator it = matchResults.begin(); it != matchResults.end(); it++) {
+        int startPos = it->startPos;
+        int endPos = it->endPos;
+        string value = it->content;
+        //cout << value << endl;
         if (value == "bleuValueShow") {
             if (name2Bleu.size() != 0)
                 genBleuShow();
@@ -145,12 +146,12 @@ int HtmlGen::processHtml(regex_t *pResult, const string& findText, const vector<
                 return 1;
             }
             else {
-                cout << messDict[value] << ":" << matchResults.size() << endl;
+                //cout << messDict[value] << ":" << matchResults.size() << endl;
                 replaceText += findText.substr(preEndPos, startPos - preEndPos) + messDict[value];
                 preEndPos = endPos;
-                if (it == (matchResults.end()-2) ) {
+                if (it == (matchResults.end()-1) ) {
                     replaceText += findText.substr(endPos, findText.size()-endPos);
-                    outputFile << replaceText << std::endl;
+                    outputFile << replaceText;
                     outputFile.flush();
                     return 0;
                 }
@@ -161,58 +162,63 @@ int HtmlGen::processHtml(regex_t *pResult, const string& findText, const vector<
 }
 
 int HtmlGen::genBleuShow() {
-    outputFile << "<div class=\"bleu_value_show\">" << endl;
+    outputFile << "<div class=\"bleu_value_show\">";
+    string barColor[5] = {" ", "progress-bar-success", "progress-bar-info", "progress-bar-warning",
+                          "progress-bar-danger"};
+    int index = 0;
     for (map<string, double>::iterator it = name2Bleu.begin(); it != name2Bleu.end(); it++) {
         string name = it->first;
         double bleu = it->second; 
-        outputFile << "<div class=\"row\">" << endl 
-                   << "<div class=\"col-md-2 col-md-offset-2\">" << endl
-                   << "<p>" << name << " BLEU value: </p>" << endl
-                   << "</div>" << endl
-                   << "<div class=\"col-md-6\">" << endl          
-                   << "<div class=\"progress\">" << endl 
-                   << "<div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"" << (int)(bleu*100) 
+        outputFile << "<div class=\"row\">" 
+                   << "<div class=\"col-md-2 col-md-offset-2\">"
+                   << "<p><strong class=\"text-uppercase\">" << name << " BLEU value: </strong></p>"
+                   << "</div>"
+                   << "<div class=\"col-md-6\">"          
+                   << "<div class=\"progress\">" 
+                   << "<div class=\"progress-bar " << barColor[index%5]
+                   << "\"role=\"progressbar\" aria-valuenow=\"" << (int)(bleu*100) 
                    << "\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: "
-                   << (int)(bleu*100) << "%;\">" << endl
-                   << bleu << "</div>\n</div>\n</div>\n</div>" << endl;
+                   << (int)(bleu*100) << "%;\">"
+                   << bleu << "</div></div></div></div>";
         outputFile.flush(); 
+        index++;
     }
-    outputFile << "</div>" << endl;
+    outputFile << "</div>";
     return 0;
 }
 
 int HtmlGen::genImgShow(const vector<imgBlock>& results) {
-    outputFile << "<div class=\"img_caption_show\">" << endl;
+    outputFile << "<div class=\"img_caption_show\">";
     outputFile.flush();
     const int COLUMN = 3;
     int cnt = 0;
     for (vector<imgBlock>::const_iterator imgItem = results.begin(); imgItem != results.end(); imgItem++) {
         if (cnt % COLUMN == 0) {
-            outputFile << "<div class=\"row\">" << endl;
+            outputFile << "<div class=\"row\">";
             outputFile.flush();
         }
 
-        outputFile << "<div class=\"col-md-4\">\n<div class=\"img_container\">" 
-                   << "<img src=\"" << imgItem->url << "\" alt=\"" << imgItem->id 
-                   << "\" title=\"" << imgItem->id << "\" class=\"origin_img img-rounded\" />" << endl;
+        outputFile << "<div class=\"col-md-4\"><div class=\"img_container\">" 
+                   << "<img src=\"" << imgItem->url << "\" alt=\"" << imgItem->filename 
+                   << "\" title=\"" << imgItem->filename << "\" class=\"origin_img img-rounded\" />";
         outputFile.flush();
         for (vector<string>::const_iterator caption = imgItem->captions.begin(); caption != imgItem->captions.end(); caption++) {
             vector<string> name2caption = imgItem->split(*caption, ':');
-            outputFile << "<p><strong>" << name2caption[0] << ": </strong>"
-                       << name2caption[1] << "</p>" << endl;
+            outputFile << "<p><strong class=\"text-capitalize\">" << name2caption[0] << ": </strong>"
+                       << name2caption[1] << "</p>";
             outputFile.flush();
         }
-        outputFile << "</div>\n</div>" << endl;
+        outputFile << "</div>\n</div>";
         outputFile.flush();
 
         if (cnt % COLUMN == 2 || imgItem == (results.end()-1) ) {
-            outputFile << "</div>" << endl;
+            outputFile << "</div>";
             outputFile.flush();
         }
         cnt++;
     }
 
-    outputFile << "</div>" << endl;
+    outputFile << "</div>";
     outputFile.flush();
     return 0;
 }
