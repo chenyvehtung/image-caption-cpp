@@ -42,7 +42,7 @@ void HtmlGen::setBleu(const map<string, double>& name2bleu) {
 }
 
 bool HtmlGen::generate(const vector<imgBlock>& results) {
-    inputFile.open("template.html", std::fstream::in);
+    inputFile.open("reserve/template.html", std::fstream::in);
     if (!inputFile) {
         cout << "cannot open template.html" << std::endl;
         exit(2);

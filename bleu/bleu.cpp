@@ -115,7 +115,7 @@ void Bleu::addSentences(const string& candSentence, const vector<string>& refSen
         }
         vector<string> refSentenWords = sentenceTokenizer(refSentence);
         refSentensWords.push_back(refSentenWords);
-        if (abs((int)candSentenWords.size() - (int)refSentenWords.size()) < bestRefLength) {
+        if (abs((int)candSentenWords.size() - (int)refSentenWords.size()) < (int)bestRefLength) {
             bestRefLength = refSentenWords.size();
         }
     }

@@ -3,7 +3,7 @@
 
 int main(int argc, char const *argv[])
 {
-    HtmlGen htmlGen("homepage");
+    HtmlGen htmlGen("homepage.html");
     map<string, double> name2bleu;
     name2bleu["Human"] = 0.7845;
     name2bleu["Meachine"] = 0.333;
