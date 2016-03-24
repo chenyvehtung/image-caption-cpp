@@ -31,13 +31,7 @@ namespace utilities {
             return cos_distance < a.cos_distance;
         }
     };
-
-    struct ResultArray {
-        vector<string> captions;
-        string url;
-        string id;
-    };
-
+    
     map< string, vector<double> > vggLexer(string filename);
     vector<utilities::DataArray> dataLoad(string filename, string type, map< string, vector<double> > vggFeatures);
 };
