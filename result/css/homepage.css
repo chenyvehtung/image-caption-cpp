@@ -22,14 +22,18 @@ body {
     /* margin: 20px; */
     padding: 10px;
     margin: 10px 0;
+    -moz-box-shadow: 4px 4px 10px #888888; /* è€çš„ Firefox */
+    box-shadow: 4px 4px 10px #888888;
 }
 .img_container p{
-    font-size: 18px;
+    font-size: 16px;
+    margin: 0 0 2px;
 }
 .origin_img {
-    height: 300px;
+    max-height: 300px;
     display: block;
     margin: 5px auto;
+    max-width: 100%;
 }
 
 footer {

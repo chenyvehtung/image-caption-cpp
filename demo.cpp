@@ -27,7 +27,7 @@ int main() {
     cstart = chrono::high_resolution_clock::now();
     trainData = utilities::dataLoad(Settings::DATAPATH() + Settings::TRAIN_FILE(), "train", vggFeature);
     valData = utilities::dataLoad(Settings::DATAPATH() + Settings::VAL_FILE(), "val", vggFeature);
-    testData = utilities::dataLoad(Settings::DATAPATH() + Settings::TEST_FILE(), "test", vggFeature);
+    /*testData = utilities::dataLoad(Settings::DATAPATH() + Settings::TEST_FILE(), "test", vggFeature);*/
     cend = chrono::high_resolution_clock::now();
     cout << "load data success! " << chrono::duration_cast<std::chrono::microseconds>(cend - cstart).count() / 1000000.0
         << " seconds cost." << endl;
@@ -38,24 +38,17 @@ int main() {
     int gram = 2, refer = 4;
     Bleu* bleu = new Bleu(gram, refer);
     Bleu* bleuHuman = new Bleu(gram, refer);
-    ofstream captionResult;
-    captionResult.open("capresults.txt");
-    ofstream humanResult;
-    humanResult.open("humanresults.txt");
+    fstream captionResult;
+    captionResult.open("capresults.txt", std::fstream::trunc);
+    fstream humanResult;
+    humanResult.open("humanresults.txt", std::fstream::trunc);
 
     for (auto& valItem : valData) {
-        if (valItem.id == "321169") {
-            queryData = valItem;
-            break;
-        }
-    }
-        srand(time(NULL));
-        //queryData = testData[rand() % testData.size()];
-        //queryData = valItem;
+        queryData = valItem;
         cstart = chrono::high_resolution_clock::now();
         queryCaption = lav.describeImg(queryData, trainData);
         cend = chrono::high_resolution_clock::now();
-        cout << queryCaption[0].caption << "\nURL: " << queryData.url << "\nID: " << queryData.id << " Takes "
+        cout << queryCaption[0].caption << "\nFilename: " << queryData.file_name << " Takes "
             << chrono::duration_cast<std::chrono::microseconds>(cend - cstart).count() / 1000000.0 
             << " seconds. OOV rate is " << lav.oovRate << "%" << endl;
 
@@ -72,7 +65,7 @@ int main() {
         captionResult << queryData.id << "\t" << queryCaption[0].caption << "\n";
         humanResult << queryData.id << "\t" << queryData.sentences[index] << "\n";
         captionResult.flush(); humanResult.flush();
-//    }
+    }
     double captionBleu = bleu->getBleuValue();
     double humanBleu = bleuHuman->getBleuValue();
 
@@ -85,6 +78,10 @@ int main() {
 
     delete bleu;
     delete bleuHuman;
+    vggFeature.clear();
+    trainData.clear();
+    valData.clear();
+    testData.clear();
     
     return 0;
 }

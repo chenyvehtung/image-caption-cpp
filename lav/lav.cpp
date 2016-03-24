@@ -22,11 +22,8 @@ vector<utilities::CaptionArray> Lav::describeImg(const utilities::DataArray& que
 
     /*---------------load language model word2vec------------*/
     Word2Vec<std::string> model;
-    //auto cstart = chrono::high_resolution_clock::now();
     model.load(Settings::WORD2VEC_BIN());
-    //auto cend = chrono::high_resolution_clock::now();
-    //cout << chrono::duration_cast<std::chrono::microseconds>(cend - cstart).count() / 1000000.0
-    //    << " seconds cost." << endl;
+    //std::cout << (int)model.word_vector_size() << std::endl;
 
     vector<string> excludeWords = language.loadExcludeWord(Settings::EXCLUDE_FILE(), Settings::INCLUDE_FILE(), 
                                                         Settings::EX_STOP_WORDS, Settings::IN_OPERA_WORDS);
@@ -75,12 +72,11 @@ vector<utilities::CaptionArray> Lav::describeImg(const utilities::DataArray& que
 
     /*--------------rerank by cos distance------------------*/
     for (auto& captionItem : captionSet) {
-        std::cout << captionItem.caption << std::endl;
         captionItem.cos_distance = language.getCosSimilarity(queryImg, captionItem.sentence_vec);
     }
     std::sort(captionSet.begin(), captionSet.end());
 
-    std::cout << captionSet.size() << "\tCaption Dist: " << (captionSet.end()-1)->cos_distance << std::endl;
+    //std::cout << captionSet.size() << "\tCaption Dist: " << (captionSet.end()-1)->cos_distance << std::endl;
 
     oovRate = (double)language.OOV * 100 / tokenCnt;
 
