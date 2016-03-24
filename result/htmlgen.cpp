@@ -16,7 +16,7 @@ HtmlGen::HtmlGen() {
 }
 
 HtmlGen::HtmlGen(string filename) {
-    outputFile.open(filename+".html", std::fstream::out | std::fstream::trunc);
+    outputFile.open(filename, std::fstream::out | std::fstream::trunc);
     if (!outputFile) {
         cout << "cannot create " << filename << ".html" << std::endl;
         exit(1);

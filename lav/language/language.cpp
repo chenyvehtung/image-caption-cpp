@@ -45,7 +45,6 @@ vector<double> Language::getSentenceVec(Word2Vec<std::string> model, const vecto
     for (int i = 0; i < modelSize; i++) {
         sentenceVec.push_back(0);
     }
-
     for (auto &word : sentence) {
         //need exclude and the word isn't in the list of exclude words.
         if (needExclude && (find(excludeVec.begin(), excludeVec.end(), word) == excludeVec.end())) {
@@ -92,6 +91,9 @@ double Language::getCosSimilarity(const vector<double>& baseVec, const vector<do
         }
         baseNorm = std::sqrt(baseNorm);
         targetNorm = std::sqrt(targetNorm);
+        /* make sure the divisor is not 0*/
+        if (baseNorm == 0) baseNorm = 0.000001;
+        if (targetNorm == 0) targetNorm = 0.000001;
         cosDist = dotProduct / (baseNorm * targetNorm);
     }
     return cosDist;
