@@ -8,7 +8,7 @@ using std::cout;
 #define MAX_ERROR_MSG 0x1000
 
 HtmlGen::HtmlGen() {
-    outputFile.open("index.html", std::fstream::out | std::fstream::trunc);
+    outputFile.open("result/index.html", std::fstream::out | std::fstream::trunc);
     if (!outputFile) {
         cout << "cannot create index.html" << std::endl;
         exit(2);
@@ -42,7 +42,7 @@ void HtmlGen::setBleu(const map<string, double>& name2bleu) {
 }
 
 bool HtmlGen::generate(const vector<imgBlock>& results) {
-    inputFile.open("reserve/template.html", std::fstream::in);
+    inputFile.open("result/reserve/template.html", std::fstream::in);
     if (!inputFile) {
         cout << "cannot open template.html" << std::endl;
         exit(2);
@@ -178,7 +178,7 @@ int HtmlGen::genBleuShow() {
                    << "<div class=\"progress-bar " << barColor[index%5]
                    << "\"role=\"progressbar\" aria-valuenow=\"" << (int)(bleu*100) 
                    << "\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: "
-                   << (int)(bleu*100) << "%;\">"
+                   << bleu*100 << "%;\">"
                    << bleu << "</div></div></div></div>";
         outputFile.flush(); 
         index++;
@@ -208,7 +208,7 @@ int HtmlGen::genImgShow(const vector<imgBlock>& results) {
                        << name2caption[1] << "</p>";
             outputFile.flush();
         }
-        outputFile << "</div>\n</div>";
+        outputFile << "</div></div>";
         outputFile.flush();
 
         if (cnt % COLUMN == 2 || imgItem == (results.end()-1) ) {

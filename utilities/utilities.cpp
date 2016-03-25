@@ -78,9 +78,6 @@ vector<utilities::DataArray> utilities::dataLoad(string filename, string type, m
                 else if (keys[index] == "file_name") {
                     dataItem.file_name = token;
                 }
-                else if (keys[index] == "url") {
-                    dataItem.url = token;
-                }
                 else if (keys[index] == "sentences") {
                     std::istringstream tokenStream(token);
                     string sentence;
@@ -96,6 +93,9 @@ vector<utilities::DataArray> utilities::dataLoad(string filename, string type, m
             if (type == "test") {
                 dataItem.url = "http://tasviret.cs.hacettepe.edu.tr/dataset/MSCOCO/test2014/" 
                                      + dataItem.file_name;
+            }
+            else {
+                dataItem.url = "http://shannon.cs.illinois.edu/alice/MSCOCO/images/" + dataItem.file_name;
             }
             dataArray.push_back(dataItem);
         }

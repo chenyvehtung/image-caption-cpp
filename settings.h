@@ -29,6 +29,10 @@ public:
         static const string str = "image_features_mRNN/VGG_feat_o_dct_mscoco_2014.txt";
         return str;
     }
+    static const string& MRNN_FEATURE_FILE() {
+        static const string str = "image_features_mRNN/VGG_feat_mRNN_refine_dct_mscoco_2014.txt";
+        return str;
+    }
     static const string& WORD2VEC_BIN() {
         static const string str = "files/corpora/mscoco/vectors.bin";
         return str;
