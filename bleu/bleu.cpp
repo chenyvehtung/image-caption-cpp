@@ -28,6 +28,14 @@ Bleu::Bleu(size_t gram, size_t ref){
     bestRefLengthSum = 0;
 }
 
+void Bleu::setGram(size_t gram) {
+    maxGramNum = gram;
+}
+
+void Bleu::setRef(size_t ref) {
+    refNum = ref;
+}
+
 string Bleu::getNextNGram(const vector<string>& words, size_t offset, size_t gramNum){
     string nextNGram = "";
     for (size_t i = offset; i < offset + gramNum; i++) {

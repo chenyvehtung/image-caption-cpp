@@ -51,19 +51,31 @@ int main() {
     //trainData.insert(trainData.end(), valData.begin(), valData.end());
 
     /*--------------------------- Init Bleu Log File & Img Blocks ----------------------------*/
-    int gram = 2, refer = 4;
-    Bleu* bleu = new Bleu(gram, refer);
-    Bleu* bleuHuman = new Bleu(gram, refer);
-    Bleu* bleuMRNN = new Bleu(gram, refer);
+    int refer = 4;
+    int maxGram = 4;
+    Bleu* bleuVGG = new Bleu[4];
+    Bleu* bleuMRNN = new Bleu[4];
+    Bleu* bleuHuman = new Bleu[4];
+    for (int i = 0; i < maxGram; i++) {
+        bleuVGG[i].setGram(i+1);
+        bleuVGG[i].setRef(refer);
+        bleuMRNN[i].setGram(i+1);
+        bleuMRNN[i].setRef(refer);
+        bleuHuman[i].setGram(i+1);
+        bleuHuman[i].setRef(refer);
+    }
+
     fstream captionResult;
     captionResult.open("capresults.txt", std::fstream::out | std::fstream::trunc);
     fstream humanResult;
     humanResult.open("humanresults.txt", std::fstream::out | std::fstream::trunc);
     fstream mRNNResult;
     mRNNResult.open("mrnnresults.txt", std::fstream::out | std::fstream::trunc);
+    fstream humanRef;
+    humanRef.open("humanref.txt", std::fstream::out | std::fstream::trunc);
     vector<imgBlock> imgBlocks;
     int valSize = valData.size();
-    const int SAMPLESIZE = 25;
+    const int SAMPLESIZE = 100;
     int beSample = valSize / SAMPLESIZE;
     int valCnt = 0;
     
@@ -87,26 +99,32 @@ int main() {
 
         /* Add sentences to Bleu and log the sentences */
         vector<string> referSentences;
-        int index = rand() % 5;
-        for (int i = 0; i < 5; i++) {
+        int index = rand() % (refer + 1);
+        for (int i = 0; i < refer + 1; i++) {
             if (i != index) {
                 referSentences.push_back(queryData.sentences[i]);
             }
         }
-        bleu->addSentences(queryCaption[0].caption, referSentences);
-        bleuHuman->addSentences(queryData.sentences[index], referSentences);
-        bleuMRNN->addSentences(mRNNQueryCaption[0].caption, referSentences);
+        for (int i = 0; i < maxGram; i++) {
+            bleuVGG[i].addSentences(queryCaption[0].caption, referSentences);
+            bleuMRNN[i].addSentences(mRNNQueryCaption[0].caption, referSentences);
+            bleuHuman[i].addSentences(queryData.sentences[index], referSentences);
+        }
         captionResult << queryData.id << "\t" << queryCaption[0].caption << "\n";
         humanResult << queryData.id << "\t" << queryData.sentences[index] << "\n";
         mRNNResult << mRNNQueryData.id << "\t" << mRNNQueryCaption[0].caption << "\n";
-        captionResult.flush(); humanResult.flush(); mRNNResult.flush();
+        humanRef << "#" << queryData.id << "\n";
+        for (int i = 0; i < refer; i++) {
+            humanRef << referSentences[i] << "\n";
+        }
+        captionResult.flush(); humanResult.flush(); mRNNResult.flush(); humanRef.flush();
 
         /* Create imgBlock for feature display */
         if (valCnt % beSample == 0) {
             vector<string> tempVec;
-            tempVec.push_back("Meachine:" + queryCaption[0].caption);
+            tempVec.push_back("VGG:" + queryCaption[0].caption);
             tempVec.push_back("MRNN:" + mRNNQueryCaption[0].caption);
-            tempVec.push_back("human:" + queryData.sentences[index]);
+            tempVec.push_back("Human:" + queryData.sentences[index]);
             imgBlock imgblock(tempVec, queryData.url, queryData.file_name);
             imgBlocks.push_back(imgblock);
         }
@@ -115,14 +133,21 @@ int main() {
     }
 
     /*-------------------------------- Calculate BLEU Value ----------------------------------*/
-    double captionBleu = bleu->getBleuValue();
+    double captionBleu = bleuVGG->getBleuValue();
     double humanBleu = bleuHuman->getBleuValue();
     double mrnnBleu = bleuMRNN->getBleuValue();
-    std::cout << "Bleu Value: " << captionBleu << "\nHuman Bleu Value: " << humanBleu << endl
+    std::cout << "VGG Bleu Value: " << captionBleu << "\nHuman Bleu Value: " << humanBleu << endl
               << "mRNN Bleu Value: " << mrnnBleu << endl;
-    captionResult << "Bleu Value: " << captionBleu << endl;
-    humanResult << "Human Bleu Value: " << humanBleu << endl;
-    mRNNResult << "mRNN Bleu Value: " << mrnnBleu << endl;
+    captionResult << "VGG Bleu Value[0]: " << captionBleu << endl;
+    humanResult << "Human Bleu Value[0]: " << humanBleu << endl;
+    mRNNResult << "mRNN Bleu Value[0]: " << mrnnBleu << endl;
+    captionResult.flush(); humanResult.flush(); mRNNResult.flush();
+    for (int i = 1; i < maxGram; i++) {
+        captionResult << "VGG Bleu Value[" << i << "]: " << bleuVGG[i].getBleuValue() << endl;
+        mRNNResult << "mRNN Bleu Value[" << i << "]: " << bleuMRNN[i].getBleuValue() << endl;
+        humanResult << "Human Bleu Value[" << i << "]: " << bleuHuman[i].getBleuValue() << endl;
+        captionResult.flush(); humanResult.flush(); mRNNResult.flush();
+    }
 
     /*-------------------------------- Generate GUI Display ----------------------------------*/
     HtmlGen* htmlGen = new HtmlGen();
@@ -140,7 +165,8 @@ int main() {
     captionResult.close();  
     humanResult.close();
     mRNNResult.close();
-    delete bleu;
+    humanRef.close();
+    delete bleuVGG;
     delete bleuHuman;
     delete bleuMRNN;
     delete htmlGen;
