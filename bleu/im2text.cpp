@@ -84,7 +84,6 @@ int main() {
     }
 
     /*--------------- Release Memory --------------------*/
-    //delete bleuI2T;
     im2textResult.close();
     imgRef.close();
 

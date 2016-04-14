@@ -6,11 +6,36 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <string> //for getline
 #include <cstdlib> //for srand and rand
 #include <time.h> //for time
 #include <chrono>  //for high_resolution_clock
 #include <fstream> //for ofstream
 using namespace std;
+
+/* load result for bleu test */
+void loadResults(string filename, map<string, string>& resultname) {
+    fstream resultStream;
+    resultStream.open(filename, fstream::in);
+    string row, token, id;
+    while (getline(resultStream, row)) {
+        if (row.empty())
+            continue;
+        istringstream rowTokens(row);
+        int cnt = 0;
+        while (getline(rowTokens, token, '\t')) {
+            if (cnt == 0) {
+                id = token;
+                cnt++;
+            }
+            else {
+                cnt = 0;
+                resultname[id] = token;
+            }
+        }
+    }
+    resultStream.close();
+}
 
 int main() {
     vector<utilities::DataArray> trainData, valData, testData, mRNNTrainData, mRNNValData, mRNNTestData;
@@ -53,15 +78,16 @@ int main() {
     /*--------------------------- Init Bleu Log File & Img Blocks ----------------------------*/
     int refer = 4;
     int maxGram = 4;
-    Bleu* bleuVGG = new Bleu[4];
-    Bleu* bleuMRNN = new Bleu[4];
-    Bleu* bleuHuman = new Bleu[4];
+    Bleu bleuI2T[4];
+    Bleu bleuVGG[4];
+    Bleu bleuMRNN[4];
+    Bleu bleuHuman[4];
     for (int i = 0; i < maxGram; i++) {
+        bleuI2T[i].init(i + 1, refer);
         bleuVGG[i].init(i + 1, refer);
         bleuMRNN[i].init(i + 1, refer);
         bleuHuman[i].init(i + 1, refer);
     }
-
     fstream captionResult;
     captionResult.open("capresults.txt", std::fstream::out | std::fstream::trunc);
     fstream humanResult;
@@ -75,6 +101,11 @@ int main() {
     const int SAMPLESIZE = 100;
     int beSample = valSize / SAMPLESIZE;
     int valCnt = 0;
+
+    // load im2text result
+    map<string, string> i2tResult;
+    loadResults("im2textResult.txt", i2tResult);
+
     
     /*-------------------------------- Describe Each Picture ----------------------------------*/
     for (auto& valItem : valData) {
@@ -103,6 +134,7 @@ int main() {
             }
         }
         for (int i = 0; i < maxGram; i++) {
+            bleuI2T[i].addSentences(i2tResult[queryData.id], referSentences);
             bleuVGG[i].addSentences(queryCaption[0].caption, referSentences);
             bleuMRNN[i].addSentences(mRNNQueryCaption[0].caption, referSentences);
             bleuHuman[i].addSentences(queryData.sentences[index], referSentences);
@@ -119,7 +151,8 @@ int main() {
         /* Create imgBlock for feature display */
         if (valCnt % beSample == 0) {
             vector<string> tempVec;
-            tempVec.push_back("VGG:" + queryCaption[0].caption);
+            tempVec.push_back("I2T:" + i2tResult[queryData.id]);
+            tempVec.push_back("NN:" + queryCaption[0].caption);
             tempVec.push_back("MRNN:" + mRNNQueryCaption[0].caption);
             tempVec.push_back("Human:" + queryData.sentences[index]);
             imgBlock imgblock(tempVec, queryData.url, queryData.file_name);
@@ -130,10 +163,13 @@ int main() {
     }
 
     /*-------------------------------- Calculate BLEU Value ----------------------------------*/
+    double i2tBleu = bleuI2T->getBleuValue();
     double captionBleu = bleuVGG->getBleuValue();
     double humanBleu = bleuHuman->getBleuValue();
     double mrnnBleu = bleuMRNN->getBleuValue();
-    std::cout << "VGG Bleu Value: " << captionBleu << "\nHuman Bleu Value: " << humanBleu << endl
+    std::cout << "I2T Bleu Value:" << i2tBleu << endl
+              << "VGG Bleu Value: " << captionBleu << endl
+              << "Human Bleu Value: " << humanBleu << endl
               << "mRNN Bleu Value: " << mrnnBleu << endl;
     captionResult << "VGG Bleu Value[0]: " << captionBleu << endl;
     humanResult << "Human Bleu Value[0]: " << humanBleu << endl;
@@ -145,32 +181,33 @@ int main() {
         humanResult << "Human Bleu Value[" << i+1 << "]: " << bleuHuman[i].getBleuValue() << endl;
         captionResult.flush(); humanResult.flush(); mRNNResult.flush();
     }
+    for (int i = 0; i < maxGram; i++) {
+        captionResult << "I2T Bleu Value[" << i + 1 << "]:" << bleuI2T[i].getBleuValue() << endl;
+        captionResult.flush();
+    }
 
     /*-------------------------------- Generate GUI Display ----------------------------------*/
-    HtmlGen* htmlGen = new HtmlGen();
+    HtmlGen htmlGen;
     map<string, double> name2bleu;
-    name2bleu["meachine"] = captionBleu;
+    name2bleu["i2t"] = i2tBleu;
+    name2bleu["nn"] = captionBleu;
     name2bleu["human"] = humanBleu;
     name2bleu["mrnn"] = mrnnBleu; 
-    htmlGen->setBleu(name2bleu);
+    htmlGen.setBleu(name2bleu);
     map<string, string> info;
     info["author"] = "Donald";
-    htmlGen->setInfor(info);
-    htmlGen->generate(imgBlocks);
+    htmlGen.setInfor(info);
+    htmlGen.generate(imgBlocks);
 
     /*----------------------------------- Release Memory --------------------------------------*/
     captionResult.close();  
     humanResult.close();
     mRNNResult.close();
     humanRef.close();
-    delete bleuVGG;
-    delete bleuHuman;
-    delete bleuMRNN;
-    delete htmlGen;
-    vggFeature.clear();
-    mRNNVggFeature.clear();
+    vggFeature.clear(); mRNNVggFeature.clear();
     trainData.clear(); valData.clear(); testData.clear();
     mRNNTrainData.clear(); mRNNValData.clear(); mRNNTestData.clear();
+    i2tResult.clear();
     imgBlocks.clear();
     
     return 0;
