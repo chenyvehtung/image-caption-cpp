@@ -57,12 +57,9 @@ int main() {
     Bleu* bleuMRNN = new Bleu[4];
     Bleu* bleuHuman = new Bleu[4];
     for (int i = 0; i < maxGram; i++) {
-        bleuVGG[i].setGram(i+1);
-        bleuVGG[i].setRef(refer);
-        bleuMRNN[i].setGram(i+1);
-        bleuMRNN[i].setRef(refer);
-        bleuHuman[i].setGram(i+1);
-        bleuHuman[i].setRef(refer);
+        bleuVGG[i].init(i + 1, refer);
+        bleuMRNN[i].init(i + 1, refer);
+        bleuHuman[i].init(i + 1, refer);
     }
 
     fstream captionResult;
@@ -143,9 +140,9 @@ int main() {
     mRNNResult << "mRNN Bleu Value[0]: " << mrnnBleu << endl;
     captionResult.flush(); humanResult.flush(); mRNNResult.flush();
     for (int i = 1; i < maxGram; i++) {
-        captionResult << "VGG Bleu Value[" << i << "]: " << bleuVGG[i].getBleuValue() << endl;
-        mRNNResult << "mRNN Bleu Value[" << i << "]: " << bleuMRNN[i].getBleuValue() << endl;
-        humanResult << "Human Bleu Value[" << i << "]: " << bleuHuman[i].getBleuValue() << endl;
+        captionResult << "VGG Bleu Value[" << i+1 << "]: " << bleuVGG[i].getBleuValue() << endl;
+        mRNNResult << "mRNN Bleu Value[" << i+1 << "]: " << bleuMRNN[i].getBleuValue() << endl;
+        humanResult << "Human Bleu Value[" << i+1 << "]: " << bleuHuman[i].getBleuValue() << endl;
         captionResult.flush(); humanResult.flush(); mRNNResult.flush();
     }
 

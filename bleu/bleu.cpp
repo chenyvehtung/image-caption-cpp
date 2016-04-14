@@ -11,29 +11,23 @@
 #define BLEU_DEBUG false //for showing debug message
 
 Bleu::Bleu() {
-    maxGramNum = 1;
-    refNum = 1;
-    candLengthSum.push_back(0);
-    candClipSum.push_back(0);
-    bestRefLengthSum = 0;
+    init(1, 1);
 }
 
 Bleu::Bleu(size_t gram, size_t ref){
+    init(gram, ref);
+}
+
+void Bleu::init(size_t gram, size_t ref) {
     maxGramNum = gram;
     refNum = ref;
+    candLengthSum.clear();
+    candClipSum.clear();
     for (size_t i = 0; i < maxGramNum; i++) {
         candLengthSum.push_back(0);
         candClipSum.push_back(0);
     }
     bestRefLengthSum = 0;
-}
-
-void Bleu::setGram(size_t gram) {
-    maxGramNum = gram;
-}
-
-void Bleu::setRef(size_t ref) {
-    refNum = ref;
 }
 
 string Bleu::getNextNGram(const vector<string>& words, size_t offset, size_t gramNum){

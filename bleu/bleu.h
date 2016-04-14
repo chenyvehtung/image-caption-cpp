@@ -18,8 +18,7 @@ public:
 
     Bleu();
     Bleu(size_t gram, size_t ref);
-    void setGram(size_t gram);
-    void setRef(size_t ref);
+    void init(size_t gram, size_t ref);
 
     void addSentences(const string& candSentence, const vector<string>& refSentences);
     map<string, size_t> collectStats(const vector<string>& words, size_t gramNum);
