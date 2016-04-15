@@ -163,36 +163,34 @@ int main() {
     }
 
     /*-------------------------------- Calculate BLEU Value ----------------------------------*/
-    double i2tBleu = bleuI2T->getBleuValue();
-    double captionBleu = bleuVGG->getBleuValue();
-    double humanBleu = bleuHuman->getBleuValue();
-    double mrnnBleu = bleuMRNN->getBleuValue();
-    std::cout << "I2T Bleu Value:" << i2tBleu << endl
-              << "VGG Bleu Value: " << captionBleu << endl
-              << "Human Bleu Value: " << humanBleu << endl
-              << "mRNN Bleu Value: " << mrnnBleu << endl;
-    captionResult << "VGG Bleu Value[0]: " << captionBleu << endl;
-    humanResult << "Human Bleu Value[0]: " << humanBleu << endl;
-    mRNNResult << "mRNN Bleu Value[0]: " << mrnnBleu << endl;
-    captionResult.flush(); humanResult.flush(); mRNNResult.flush();
-    for (int i = 1; i < maxGram; i++) {
-        captionResult << "VGG Bleu Value[" << i+1 << "]: " << bleuVGG[i].getBleuValue() << endl;
-        mRNNResult << "mRNN Bleu Value[" << i+1 << "]: " << bleuMRNN[i].getBleuValue() << endl;
-        humanResult << "Human Bleu Value[" << i+1 << "]: " << bleuHuman[i].getBleuValue() << endl;
-        captionResult.flush(); humanResult.flush(); mRNNResult.flush();
+    fstream bleuResult;
+    bleuResult.open("bleuresult.txt", std::fstream::out | std::fstream::trunc);
+    double i2tBleu[4], nnBleu[4], mrnnBleu[4], humanBleu[4];
+    for (int bleuCnt = 0; bleuCnt < maxGram; bleuCnt++) {
+        i2tBleu[bleuCnt] = bleuI2T[bleuCnt].getBleuValue();
+        nnBleu[bleuCnt] = bleuVGG[bleuCnt].getBleuValue();
+        mrnnBleu[bleuCnt] = bleuMRNN[bleuCnt].getBleuValue();
+        humanBleu[bleuCnt] = bleuHuman[bleuCnt].getBleuValue();
+        // print it out
+        cout << "i2tBleu[" << bleuCnt + 1 << "]: " << i2tBleu[bleuCnt] << endl
+            << "nnBleu[" << bleuCnt + 1 << "]: " << nnBleu[bleuCnt] << endl
+            << "mRNNBleu[" << bleuCnt + 1 << "]: " << mrnnBleu[bleuCnt] << endl
+            << "humanBleu[" << bleuCnt + 1 << "]: " << humanBleu[bleuCnt] << endl << endl;
+        // log it to file
+        bleuResult << "i2tBleu[" << bleuCnt + 1 << "]: " << i2tBleu[bleuCnt] << endl
+                   << "nnBleu[" << bleuCnt + 1 << "]: " << nnBleu[bleuCnt] << endl
+                   << "mRNNBleu[" << bleuCnt + 1 << "]: " << mrnnBleu[bleuCnt] << endl
+                   << "humanBleu[" << bleuCnt + 1 << "]: " << humanBleu[bleuCnt] << endl << endl;
     }
-    for (int i = 0; i < maxGram; i++) {
-        captionResult << "I2T Bleu Value[" << i + 1 << "]:" << bleuI2T[i].getBleuValue() << endl;
-        captionResult.flush();
-    }
+    bleuResult.flush();
 
     /*-------------------------------- Generate GUI Display ----------------------------------*/
     HtmlGen htmlGen;
     map<string, double> name2bleu;
-    name2bleu["i2t"] = i2tBleu;
-    name2bleu["nn"] = captionBleu;
-    name2bleu["human"] = humanBleu;
-    name2bleu["mrnn"] = mrnnBleu; 
+    name2bleu["i2t"] = i2tBleu[0];
+    name2bleu["nn"] = nnBleu[0];
+    name2bleu["mrnn"] = mrnnBleu[0];
+    name2bleu["human"] = humanBleu[0];
     htmlGen.setBleu(name2bleu);
     map<string, string> info;
     info["author"] = "Donald";
@@ -204,6 +202,7 @@ int main() {
     humanResult.close();
     mRNNResult.close();
     humanRef.close();
+    bleuResult.close();
     vggFeature.clear(); mRNNVggFeature.clear();
     trainData.clear(); valData.clear(); testData.clear();
     mRNNTrainData.clear(); mRNNValData.clear(); mRNNTestData.clear();

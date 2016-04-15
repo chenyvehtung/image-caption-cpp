@@ -1,0 +1,20 @@
+i2tBleu[1]: 0.448847
+nnBleu[1]: 0.524936
+mRNNBleu[1]: 0.534751
+humanBleu[1]: 0.625883
+
+i2tBleu[2]: 0.251635
+nnBleu[2]: 0.331504
+mRNNBleu[2]: 0.338937
+humanBleu[2]: 0.431128
+
+i2tBleu[3]: 0.138435
+nnBleu[3]: 0.204133
+mRNNBleu[3]: 0.210328
+humanBleu[3]: 0.285336
+
+i2tBleu[4]: 0.0787529
+nnBleu[4]: 0.12605
+mRNNBleu[4]: 0.12919
+humanBleu[4]: 0.189409
+
